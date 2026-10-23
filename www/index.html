@@ -2,27 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#0d0f12">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>آلة حاسبة متطورة</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>لعبة الدودة</title>
   <style>
     :root {
-      --bg-main: #0c0e12;
-      --bg-card: #151921;
-      --btn-num: #1b202a;
-      --btn-num-active: #28303f;
-      --btn-func: #262c38;
-      --btn-func-active: #353d4d;
-      --btn-op: #ff9500;
-      --btn-op-active: #cca300;
-      --btn-equals: #10b981;
-      --btn-equals-active: #059669;
-      --text-main: #f3f4f6;
-      --text-muted: #8b949e;
-      --danger: #ef4444;
-      --radius-btn: 22px;
+      --bg-color: #0d131f;
+      --card-bg: #1a2234;
+      --accent-color: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.4);
+      --danger-color: #ef4444;
+      --snake-head: #34d399;
+      --snake-body: #059669;
+      --food-color: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --pad-btn: #243048;
+      --pad-btn-active: #334366;
     }
 
     * {
@@ -32,656 +27,720 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      touch-action: manipulation;
     }
 
     body {
-      background-color: var(--bg-main);
+      background-color: var(--bg-color);
       color: var(--text-main);
-      height: 100dvh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .calculator {
-      width: 100%;
-      max-width: 440px;
-      height: 100dvh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: space-between;
-      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
-      background: radial-gradient(circle at 50% 0%, #171c26 0%, var(--bg-main) 70%);
-      position: relative;
+      padding: 12px 16px;
+      overflow-x: hidden;
     }
 
     /* Top Bar */
-    .top-bar {
+    .header {
+      width: 100%;
+      max-width: 420px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 4px;
-      height: 48px;
+      margin-bottom: 8px;
     }
 
-    .brand {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: #9ca3af;
+    .title-box {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .brand-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--btn-op);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--btn-op);
-    }
-
-    .icon-btn {
-      background: #181d27;
-      border: 1px solid #28303e;
-      color: var(--text-muted);
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .icon-btn:active {
-      transform: scale(0.92);
-      background: #232a38;
-      color: #fff;
-    }
-
-    /* Screen Area */
-    .display {
-      flex: 1;
-      min-height: 140px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: flex-end;
-      padding: 12px 14px;
-      overflow: hidden;
-      direction: ltr; /* Keeps math left-to-right properly formatted */
-    }
-
-    .history-expr {
-      color: var(--text-muted);
+    .title-box h1 {
       font-size: 1.25rem;
-      font-weight: 400;
-      min-height: 28px;
-      word-break: break-all;
-      text-align: right;
-      width: 100%;
-      opacity: 0.85;
-      transition: all 0.2s;
+      font-weight: 800;
+      color: var(--accent-color);
+      text-shadow: 0 0 12px var(--accent-glow);
     }
 
-    .main-expr {
-      color: var(--text-main);
-      font-size: 3.5rem;
-      font-weight: 300;
-      line-height: 1.15;
-      word-break: break-all;
-      text-align: right;
-      width: 100%;
-      margin-top: 6px;
-      letter-spacing: -0.5px;
-      transition: font-size 0.15s ease;
-    }
-
-    /* Keyboard */
-    .keypad {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      padding-bottom: 8px;
-    }
-
-    .btn {
-      position: relative;
-      border: none;
-      outline: none;
-      height: 68px;
-      border-radius: var(--radius-btn);
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: var(--text-main);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.08s ease, filter 0.15s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    }
-
-    .btn:active {
-      transform: scale(0.93);
-    }
-
-    /* Button Variants */
-    .btn-number {
-      background-color: var(--btn-num);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-    .btn-number:active {
-      background-color: var(--btn-num-active);
-    }
-
-    .btn-function {
-      background-color: var(--btn-func);
-      color: #93c5fd;
-      font-weight: 600;
-      font-size: 1.4rem;
-    }
-    .btn-function:active {
-      background-color: var(--btn-func-active);
-    }
-
-    .btn-operator {
-      background-color: #2a221b;
-      color: var(--btn-op);
-      border: 1px solid rgba(255, 149, 0, 0.18);
-      font-size: 1.8rem;
-    }
-    .btn-operator:active, .btn-operator.active-op {
-      background-color: var(--btn-op);
-      color: #fff;
-    }
-
-    .btn-equal {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #ffffff;
-      font-size: 1.9rem;
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
-    }
-    .btn-equal:active {
-      filter: brightness(1.2);
-    }
-
-    /* History Drawer Panel */
-    .history-drawer {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(12, 14, 18, 0.96);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      z-index: 50;
-      display: flex;
-      flex-direction: column;
-      padding: 16px;
-      transform: translateY(105%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .history-drawer.open {
-      transform: translateY(0);
-    }
-
-    .history-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 14px;
-      border-bottom: 1px solid #1f242f;
-    }
-
-    .history-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
-    .history-actions {
+    .score-container {
       display: flex;
       gap: 10px;
     }
 
-    .btn-text-danger {
-      background: transparent;
-      border: none;
-      color: var(--danger);
-      font-size: 0.95rem;
-      cursor: pointer;
-      padding: 6px 10px;
-      border-radius: 8px;
-    }
-    .btn-text-danger:active {
-      background: rgba(239, 68, 68, 0.12);
-    }
-
-    .history-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px 0;
+    .stat-badge {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 6px 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      align-items: center;
+      min-width: 65px;
     }
 
-    .history-item {
-      background: #151922;
-      border: 1px solid #202634;
-      border-radius: 14px;
-      padding: 14px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-      transition: background 0.15s;
-    }
-
-    .history-item:active {
-      background: #1c2331;
-    }
-
-    .history-item-calc {
+    .stat-label {
+      font-size: 0.65rem;
       color: var(--text-muted);
-      font-size: 0.95rem;
-      direction: ltr;
-    }
-
-    .history-item-res {
-      color: var(--btn-equals);
-      font-size: 1.35rem;
       font-weight: 600;
-      direction: ltr;
+      margin-bottom: 2px;
     }
 
-    .history-empty {
-      color: #6b7280;
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-value.high {
+      color: #fbbf24;
+    }
+
+    /* Game Area */
+    .game-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #gameCanvas {
+      width: 100%;
+      height: 100%;
+      background: #111827;
+      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 20px -5px var(--accent-glow);
+      display: block;
+    }
+
+    /* Overlay Menus */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 19, 31, 0.88);
+      backdrop-filter: blur(6px);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+      transition: opacity 0.2s ease;
+    }
+
+    .overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .overlay-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-main);
       text-align: center;
-      margin: auto;
-      font-size: 1rem;
     }
 
-    /* Small Screens optimization */
-    @media (max-height: 680px) {
-      .btn {
-        height: 56px;
-        font-size: 1.4rem;
-        border-radius: 18px;
-      }
-      .main-expr {
-        font-size: 2.8rem;
-      }
-      .keypad {
-        gap: 8px;
-      }
+    .overlay-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: -8px;
+    }
+
+    .primary-btn {
+      background: var(--accent-color);
+      color: #022c22;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: transform 0.1s, filter 0.1s;
+    }
+
+    .primary-btn:active {
+      transform: scale(0.96);
+      filter: brightness(0.9);
+    }
+
+    /* Actions Bar */
+    .actions-bar {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 8px;
+    }
+
+    .icon-btn {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .icon-btn:active {
+      background: var(--pad-btn-active);
+    }
+
+    /* Touch Controls */
+    .controls-wrapper {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 72px);
+      grid-template-rows: repeat(3, 62px);
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .pad-btn {
+      background: var(--pad-btn);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.06s, background-color 0.06s;
+    }
+
+    .pad-btn:active, .pad-btn.active {
+      background: var(--pad-btn-active);
+      transform: scale(0.92);
+      border-color: var(--accent-color);
+    }
+
+    .pad-up    { grid-column: 2; grid-row: 1; }
+    .pad-left  { grid-column: 1; grid-row: 2; }
+    .pad-down  { grid-column: 2; grid-row: 3; }
+    .pad-right { grid-column: 3; grid-row: 2; }
+    .pad-center {
+      grid-column: 2;
+      grid-row: 2;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      pointer-events: none;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
     }
   </style>
 </head>
 <body>
 
-  <div class="calculator">
-    <!-- Top Bar -->
-    <div class="top-bar">
-      <div class="brand">
-        <span class="brand-dot"></span>
-        حاسبة
+  <!-- Header -->
+  <header class="header">
+    <div class="title-box">
+      <h1>🐍 الدودة</h1>
+    </div>
+    <div class="score-container">
+      <div class="stat-badge">
+        <span class="stat-label">النقاط</span>
+        <span class="stat-value" id="currentScore">0</span>
       </div>
-      <button class="icon-btn" id="openHistoryBtn" aria-label="سجل العمليات" title="سجل العمليات">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
+      <div class="stat-badge">
+        <span class="stat-label">القياسي</span>
+        <span class="stat-value high" id="highScore">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Canvas Board -->
+  <div class="game-wrapper">
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+    <!-- Overlay Screen (Start / Game Over / Pause) -->
+    <div id="gameOverlay" class="overlay">
+      <h2 id="overlayTitle" class="overlay-title">لعبة الدودة</h2>
+      <p id="overlaySubtitle" class="overlay-subtitle">اضغط لبدء المغامرة</p>
+      <button id="startBtn" class="primary-btn">ابدأ اللعب</button>
+    </div>
+  </div>
+
+  <!-- Auxiliary Control Bar -->
+  <div class="actions-bar">
+    <button class="icon-btn" id="soundToggle" title="كتم/تشغيل الصوت">
+      <span id="soundIcon">🔊</span>
+    </button>
+    <button class="icon-btn" id="pauseBtn" title="إيقاف مؤقت">
+      <span id="pauseIcon">⏸️</span>
+    </button>
+  </div>
+
+  <!-- Touch D-Pad -->
+  <div class="controls-wrapper">
+    <div class="dpad">
+      <button class="pad-btn pad-up" id="btnUp" aria-label="أعلى">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
       </button>
-    </div>
-
-    <!-- Display -->
-    <div class="display">
-      <div class="history-expr" id="subDisplay"></div>
-      <div class="main-expr" id="mainDisplay">0</div>
-    </div>
-
-    <!-- Keypad -->
-    <div class="keypad">
-      <!-- Row 1 -->
-      <button class="btn btn-function" data-action="clear" style="color: #f87171;">AC</button>
-      <button class="btn btn-function" data-action="backspace">⌫</button>
-      <button class="btn btn-function" data-action="percent">%</button>
-      <button class="btn btn-operator" data-action="operator" data-val="÷">÷</button>
-
-      <!-- Row 2 -->
-      <button class="btn btn-number" data-num="7">7</button>
-      <button class="btn btn-number" data-num="8">8</button>
-      <button class="btn btn-number" data-num="9">9</button>
-      <button class="btn btn-operator" data-action="operator" data-val="×">×</button>
-
-      <!-- Row 3 -->
-      <button class="btn btn-number" data-num="4">4</button>
-      <button class="btn btn-number" data-num="5">5</button>
-      <button class="btn btn-number" data-num="6">6</button>
-      <button class="btn btn-operator" data-action="operator" data-val="-">-</button>
-
-      <!-- Row 4 -->
-      <button class="btn btn-number" data-num="1">1</button>
-      <button class="btn btn-number" data-num="2">2</button>
-      <button class="btn btn-number" data-num="3">3</button>
-      <button class="btn btn-operator" data-action="operator" data-val="+">+</button>
-
-      <!-- Row 5 -->
-      <button class="btn btn-number" data-action="negate">±</button>
-      <button class="btn btn-number" data-num="0">0</button>
-      <button class="btn btn-number" data-action="decimal">.</button>
-      <button class="btn btn-equal" data-action="calculate">=</button>
-    </div>
-
-    <!-- History Panel -->
-    <div class="history-drawer" id="historyDrawer">
-      <div class="history-header">
-        <span class="history-title">سجل العمليات</span>
-        <div class="history-actions">
-          <button class="btn-text-danger" id="clearHistoryBtn">مسح السجل</button>
-          <button class="icon-btn" id="closeHistoryBtn" aria-label="إغلاق">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div class="history-list" id="historyList">
-        <!-- Rendered items -->
-      </div>
+      <button class="pad-btn pad-left" id="btnLeft" aria-label="يسار">
+        <svg viewBox="0 0 24 24"><path d="M4 12l8-8v5h8v6h-8v5z"/></svg>
+      </button>
+      <div class="pad-center"></div>
+      <button class="pad-btn pad-right" id="btnRight" aria-label="يمين">
+        <svg viewBox="0 0 24 24"><path d="M20 12l-8 8v-5H4v-6h8V4z"/></svg>
+      </button>
+      <button class="pad-btn pad-down" id="btnDown" aria-label="أسفل">
+        <svg viewBox="0 0 24 24"><path d="M12 20l8-8h-5V4h-6v8H4z"/></svg>
+      </button>
     </div>
   </div>
 
   <script>
-    // State management
-    let currentInput = "0";
-    let previousInput = "";
-    let selectedOperator = null;
-    let shouldResetInput = false;
-    let history = [];
-
-    // Elements
-    const mainDisplay = document.getElementById("mainDisplay");
-    const subDisplay = document.getElementById("subDisplay");
-    const historyDrawer = document.getElementById("historyDrawer");
-    const historyList = document.getElementById("historyList");
-    const openHistoryBtn = document.getElementById("openHistoryBtn");
-    const closeHistoryBtn = document.getElementById("closeHistoryBtn");
-    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
-
-    // Load History
-    try {
-      const saved = localStorage.getItem("calc_history_dark");
-      if (saved) history = JSON.parse(saved);
-    } catch (e) {
-      history = [];
+    // --- Audio Synthesis (No external files) ---
+    class SoundController {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playEat() {
+        if (this.muted || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(700, this.ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.12);
+        } catch(e) {}
+      }
+      playDie() {
+        if (this.muted || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.35);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch(e) {}
+      }
+      toggle() {
+        this.muted = !this.muted;
+        return !this.muted;
+      }
     }
 
-    // Dynamic Display Scaling
-    function updateDisplay() {
-      mainDisplay.textContent = currentInput;
-      const len = currentInput.length;
-      if (len > 12) {
-        mainDisplay.style.fontSize = "1.8rem";
-      } else if (len > 8) {
-        mainDisplay.style.fontSize = "2.4rem";
-      } else {
-        mainDisplay.style.fontSize = "";
-      }
+    const sound = new SoundController();
 
-      if (selectedOperator && previousInput !== "") {
-        subDisplay.textContent = `${previousInput} ${selectedOperator}`;
-      } else {
-        subDisplay.textContent = "";
+    // --- Game Logic ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const scoreEl = document.getElementById('currentScore');
+    const highEl = document.getElementById('highScore');
+    const overlay = document.getElementById('gameOverlay');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlaySubtitle = document.getElementById('overlaySubtitle');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const soundToggle = document.getElementById('soundToggle');
+    const soundIcon = document.getElementById('soundIcon');
+
+    const GRID_SIZE = 20; // 20x20 tiles
+    let tileSize = canvas.width / GRID_SIZE;
+
+    let snake = [];
+    let direction = { x: 1, y: 0 };
+    let nextDirection = { x: 1, y: 0 };
+    let food = { x: 15, y: 10 };
+    let score = 0;
+    let highScore = parseInt(localStorage.getItem('snake_highscore') || '0', 10);
+    highEl.textContent = highScore;
+
+    let isPlaying = false;
+    let isPaused = false;
+    let gameSpeed = 130; // ms per tick
+    let lastTime = 0;
+    let accumulatedTime = 0;
+
+    function resetGame() {
+      snake = [
+        { x: 6, y: 10 },
+        { x: 5, y: 10 },
+        { x: 4, y: 10 }
+      ];
+      direction = { x: 1, y: 0 };
+      nextDirection = { x: 1, y: 0 };
+      score = 0;
+      gameSpeed = 130;
+      scoreEl.textContent = score;
+      placeFood();
+    }
+
+    function placeFood() {
+      let valid = false;
+      while (!valid) {
+        food = {
+          x: Math.floor(Math.random() * GRID_SIZE),
+          y: Math.floor(Math.random() * GRID_SIZE)
+        };
+        valid = !snake.some(segment => segment.x === food.x && segment.y === food.y);
       }
     }
 
-    // Input handlers
-    function appendNumber(num) {
-      if (shouldResetInput || currentInput === "0") {
-        currentInput = num;
-        shouldResetInput = false;
-      } else {
-        if (currentInput.length >= 15) return;
-        currentInput += num;
-      }
-      updateDisplay();
+    function startGame() {
+      sound.init();
+      resetGame();
+      isPlaying = true;
+      isPaused = false;
+      overlay.classList.add('hidden');
+      pauseIcon.textContent = '⏸️';
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
     }
 
-    function appendDecimal() {
-      if (shouldResetInput) {
-        currentInput = "0.";
-        shouldResetInput = false;
-        updateDisplay();
+    function triggerGameOver() {
+      isPlaying = false;
+      sound.playDie();
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('snake_highscore', highScore);
+        highEl.textContent = highScore;
+      }
+
+      overlayTitle.textContent = 'انتهت اللعبة!';
+      overlaySubtitle.textContent = `مجموع نقاطك: ${score}`;
+      startBtn.textContent = 'إعادة المحاولة';
+      overlay.classList.remove('hidden');
+    }
+
+    function togglePause() {
+      if (!isPlaying) return;
+      isPaused = !isPaused;
+      if (isPaused) {
+        pauseIcon.textContent = '▶️';
+        overlayTitle.textContent = 'متوقف مؤقتاً';
+        overlaySubtitle.textContent = `النقاط الحالية: ${score}`;
+        startBtn.textContent = 'استئناف';
+        overlay.classList.remove('hidden');
+      } else {
+        pauseIcon.textContent = '⏸️';
+        overlay.classList.add('hidden');
+        lastTime = performance.now();
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
+    // --- Input & Steering ---
+    function setDirection(dx, dy) {
+      // Disallow 180-degree turnaround
+      if (dx === -direction.x && dy === -direction.y) return;
+      nextDirection = { x: dx, y: dy };
+    }
+
+    // Physical arrows / WASD
+    window.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          setDirection(0, -1);
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          setDirection(0, 1);
+          break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          setDirection(-1, 0);
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          setDirection(1, 0);
+          break;
+        case ' ':
+          togglePause();
+          break;
+      }
+    });
+
+    // Touch D-Pad Binding (supports touch + click without latency)
+    function bindPadButton(el, dx, dy) {
+      const handler = (e) => {
+        e.preventDefault();
+        sound.init();
+        setDirection(dx, dy);
+        el.classList.add('active');
+        if (navigator.vibrate) navigator.vibrate(15);
+      };
+      const releaseHandler = () => el.classList.remove('active');
+
+      el.addEventListener('touchstart', handler, { passive: false });
+      el.addEventListener('touchend', releaseHandler);
+      el.addEventListener('mousedown', handler);
+      el.addEventListener('mouseup', releaseHandler);
+    }
+
+    bindPadButton(document.getElementById('btnUp'), 0, -1);
+    bindPadButton(document.getElementById('btnDown'), 0, 1);
+    bindPadButton(document.getElementById('btnLeft'), -1, 0);
+    bindPadButton(document.getElementById('btnRight'), 1, 0);
+
+    // Swipe controls directly on canvas
+    let touchStartX = 0;
+    let touchStartY = 0;
+    canvas.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', (e) => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+
+      if (Math.max(absDx, absDy) > 25) {
+        if (absDx > absDy) {
+          setDirection(dx > 0 ? 1 : -1, 0);
+        } else {
+          setDirection(0, dy > 0 ? 1 : -1);
+        }
+      }
+    }, { passive: true });
+
+    // UI Buttons
+    startBtn.addEventListener('click', () => {
+      if (isPaused) {
+        togglePause();
+      } else {
+        startGame();
+      }
+    });
+
+    pauseBtn.addEventListener('click', togglePause);
+
+    soundToggle.addEventListener('click', () => {
+      const active = sound.toggle();
+      soundIcon.textContent = active ? '🔊' : '🔇';
+    });
+
+    // --- Update & Rendering ---
+    function update() {
+      direction = nextDirection;
+      const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+      // Wall Collision
+      if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
+        triggerGameOver();
         return;
       }
-      if (!currentInput.includes(".")) {
-        currentInput += ".";
-        updateDisplay();
-      }
-    }
 
-    function toggleSign() {
-      if (currentInput === "0" || currentInput === "خطأ") return;
-      if (currentInput.startsWith("-")) {
-        currentInput = currentInput.slice(1);
-      } else {
-        currentInput = "-" + currentInput;
-      }
-      updateDisplay();
-    }
-
-    function applyPercentage() {
-      const num = parseFloat(currentInput);
-      if (isNaN(num)) return;
-      const res = num / 100;
-      currentInput = formatResult(res);
-      updateDisplay();
-    }
-
-    function chooseOperator(op) {
-      if (currentInput === "خطأ") return;
-
-      if (previousInput !== "" && !shouldResetInput) {
-        evaluate(false);
-      }
-      selectedOperator = op;
-      previousInput = currentInput;
-      shouldResetInput = true;
-      updateDisplay();
-    }
-
-    function formatResult(val) {
-      if (!isFinite(val) || isNaN(val)) return "خطأ";
-      // Avoid rounding issues
-      const fixed = parseFloat(val.toPrecision(12));
-      return fixed.toString();
-    }
-
-    function evaluate(isFinal = true) {
-      if (!selectedOperator || previousInput === "") return;
-
-      const prev = parseFloat(previousInput);
-      const curr = parseFloat(currentInput);
-
-      if (isNaN(prev) || isNaN(curr)) return;
-
-      let result = 0;
-      if (selectedOperator === "+") result = prev + curr;
-      else if (selectedOperator === "-") result = prev - curr;
-      else if (selectedOperator === "×") result = prev * curr;
-      else if (selectedOperator === "÷") {
-        if (curr === 0) {
-          currentInput = "خطأ";
-          subDisplay.textContent = "";
-          previousInput = "";
-          selectedOperator = null;
-          updateDisplay();
+      // Self Collision
+      for (let i = 0; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+          triggerGameOver();
           return;
         }
-        result = prev / curr;
       }
 
-      const formattedResult = formatResult(result);
+      snake.unshift(head);
 
-      if (isFinal) {
-        const equation = `${previousInput} ${selectedOperator} ${currentInput}`;
-        saveHistory(equation, formattedResult);
-        subDisplay.textContent = `${equation} =`;
-        currentInput = formattedResult;
-        previousInput = "";
-        selectedOperator = null;
-        shouldResetInput = true;
+      // Eat Food
+      if (head.x === food.x && head.y === food.y) {
+        score += 10;
+        scoreEl.textContent = score;
+        sound.playEat();
+        if (navigator.vibrate) navigator.vibrate(25);
+
+        // Gradually speed up
+        if (gameSpeed > 75) {
+          gameSpeed -= 1.5;
+        }
+        placeFood();
       } else {
-        currentInput = formattedResult;
-        previousInput = formattedResult;
+        snake.pop();
       }
-
-      updateDisplay();
     }
 
-    function clearAll() {
-      currentInput = "0";
-      previousInput = "";
-      selectedOperator = null;
-      shouldResetInput = false;
-      updateDisplay();
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Subtle Background Grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i <= GRID_SIZE; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * tileSize, 0);
+        ctx.lineTo(i * tileSize, canvas.height);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, i * tileSize);
+        ctx.lineTo(canvas.width, i * tileSize);
+        ctx.stroke();
+      }
+
+      // Draw Food (Apple with glow)
+      const fx = food.x * tileSize + tileSize / 2;
+      const fy = food.y * tileSize + tileSize / 2;
+      const fRadius = tileSize * 0.38;
+
+      ctx.save();
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#f43f5e';
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.arc(fx, fy, fRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Leaf
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#34d399';
+      ctx.beginPath();
+      ctx.ellipse(fx + 2, fy - fRadius, 3, 2, Math.PI / 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Draw Snake
+      for (let i = 0; i < snake.length; i++) {
+        const seg = snake[i];
+        const sx = seg.x * tileSize;
+        const sy = seg.y * tileSize;
+        const radius = i === 0 ? 8 : 6;
+
+        ctx.save();
+        if (i === 0) {
+          // Head
+          ctx.fillStyle = '#34d399';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'rgba(52, 211, 153, 0.5)';
+        } else {
+          // Body gradient blend
+          const t = i / snake.length;
+          ctx.fillStyle = t > 0.7 ? '#047857' : '#059669';
+        }
+
+        // Segment rounded block
+        roundRect(ctx, sx + 1.5, sy + 1.5, tileSize - 3, tileSize - 3, radius);
+        ctx.fill();
+        ctx.restore();
+
+        // Eyes on head
+        if (i === 0) {
+          ctx.fillStyle = '#0f172a';
+          const eyeSize = 3;
+          let leftEye = { x: sx + tileSize * 0.3, y: sy + tileSize * 0.3 };
+          let rightEye = { x: sx + tileSize * 0.7, y: sy + tileSize * 0.3 };
+
+          if (direction.x === 1) {
+            leftEye = { x: sx + tileSize * 0.7, y: sy + tileSize * 0.3 };
+            rightEye = { x: sx + tileSize * 0.7, y: sy + tileSize * 0.7 };
+          } else if (direction.x === -1) {
+            leftEye = { x: sx + tileSize * 0.3, y: sy + tileSize * 0.3 };
+            rightEye = { x: sx + tileSize * 0.3, y: sy + tileSize * 0.7 };
+          } else if (direction.y === 1) {
+            leftEye = { x: sx + tileSize * 0.3, y: sy + tileSize * 0.7 };
+            rightEye = { x: sx + tileSize * 0.7, y: sy + tileSize * 0.7 };
+          }
+
+          ctx.beginPath();
+          ctx.arc(leftEye.x, leftEye.y, eyeSize, 0, Math.PI * 2);
+          ctx.arc(rightEye.x, rightEye.y, eyeSize, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
     }
 
-    function backspace() {
-      if (shouldResetInput || currentInput === "خطأ") {
-        clearAll();
-        return;
-      }
-      if (currentInput.length > 1) {
-        currentInput = currentInput.slice(0, -1);
-      } else {
-        currentInput = "0";
-      }
-      updateDisplay();
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
     }
 
-    // History Logic
-    function saveHistory(calc, res) {
-      if (res === "خطأ") return;
-      history.unshift({ calc, res, id: Date.now() });
-      if (history.length > 30) history.pop();
-      try {
-        localStorage.setItem("calc_history_dark", JSON.stringify(history));
-      } catch (e) {}
-      renderHistory();
+    function gameLoop(timestamp) {
+      if (!isPlaying || isPaused) return;
+
+      const delta = timestamp - lastTime;
+      lastTime = timestamp;
+      accumulatedTime += delta;
+
+      while (accumulatedTime >= gameSpeed) {
+        update();
+        accumulatedTime -= gameSpeed;
+      }
+
+      draw();
+      requestAnimationFrame(gameLoop);
     }
-
-    function renderHistory() {
-      if (history.length === 0) {
-        historyList.innerHTML = `<div class="history-empty">لا يوجد سجل عمليات حسابية</div>`;
-        return;
-      }
-      historyList.innerHTML = history.map(item => `
-        <div class="history-item" data-res="${item.res}">
-          <div class="history-item-calc">${item.calc} =</div>
-          <div class="history-item-res">${item.res}</div>
-        </div>
-      `).join("");
-
-      historyList.querySelectorAll(".history-item").forEach(item => {
-        item.addEventListener("click", () => {
-          currentInput = item.getAttribute("data-res");
-          shouldResetInput = false;
-          updateDisplay();
-          historyDrawer.classList.remove("open");
-        });
-      });
-    }
-
-    clearHistoryBtn.addEventListener("click", () => {
-      history = [];
-      try {
-        localStorage.removeItem("calc_history_dark");
-      } catch (e) {}
-      renderHistory();
-    });
-
-    openHistoryBtn.addEventListener("click", () => {
-      renderHistory();
-      historyDrawer.classList.add("open");
-    });
-
-    closeHistoryBtn.addEventListener("click", () => {
-      historyDrawer.classList.remove("open");
-    });
-
-    // Handle keypad clicks
-    document.querySelector(".keypad").addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-
-      // Haptic feedback if supported
-      if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate(10);
-      }
-
-      if (btn.dataset.num !== undefined) {
-        appendNumber(btn.dataset.num);
-        return;
-      }
-
-      const action = btn.dataset.action;
-      switch (action) {
-        case "clear":
-          clearAll();
-          break;
-        case "backspace":
-          backspace();
-          break;
-        case "percent":
-          applyPercentage();
-          break;
-        case "operator":
-          chooseOperator(btn.dataset.val);
-          break;
-        case "decimal":
-          appendDecimal();
-          break;
-        case "negate":
-          toggleSign();
-          break;
-        case "calculate":
-          evaluate(true);
-          break;
-      }
-    });
-
-    // Keyboard support
-    window.addEventListener("keydown", (e) => {
-      if (e.key >= "0" && e.key <= "9") appendNumber(e.key);
-      else if (e.key === ".") appendDecimal();
-      else if (e.key === "+") chooseOperator("+");
-      else if (e.key === "-") chooseOperator("-");
-      else if (e.key === "*" || e.key === "x") chooseOperator("×");
-      else if (e.key === "/") {
-        e.preventDefault();
-        chooseOperator("÷");
-      }
-      else if (e.key === "Enter" || e.key === "=") evaluate(true);
-      else if (e.key === "Backspace") backspace();
-      else if (e.key === "Escape") clearAll();
-      else if (e.key === "%") applyPercentage();
-    });
 
     // Initial render
-    updateDisplay();
+    resetGame();
+    draw();
   </script>
 </body>
 </html>
