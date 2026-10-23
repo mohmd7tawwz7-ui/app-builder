@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عواصم للعقارات</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1d33;--navy2:#132b4a;--gold:#c9a24b;--gold2:#e6c87a;--light:#f6f4ef;--text:#1d2633;--muted:#6b7480;--green:#1f9d6a;--orange:#e08a1e;--red:#c0392b;--radius:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Tajawal',sans-serif;background:var(--light);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{width:100%;max-width:1200px;margin:auto;padding:0 16px}
+
+/* ===== الهيدر ===== */
+header{position:fixed;top:0;right:0;left:0;z-index:50;transition:.3s;padding:12px 0}
+header.scrolled{background:rgba(11,29,51,.96);backdrop-filter:blur(8px);box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff}
+.logo-icon{width:46px;height:46px;object-fit:contain;background:#fff;border-radius:12px;padding:3px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.brand b{font-family:'Reem Kufi';font-size:26px;color:var(--gold2)}
+.links{display:flex;gap:22px;color:#fff;font-weight:500}
+.links a:hover{color:var(--gold2)}
+.nav-btns{display:flex;gap:8px}
+.icon-btn{background:rgba(255,255,255,.12);border:1px solid rgba(201,162,75,.6);color:#fff;border-radius:12px;padding:8px 12px;font-family:inherit;font-size:14px;cursor:pointer;position:relative}
+.icon-btn .badge{position:absolute;top:-7px;left:-7px;background:var(--gold);color:var(--navy);border-radius:50%;width:20px;height:20px;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+@media(max-width:768px){.links{display:none}}
+
+/* ===== الواجهة ===== */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;position:relative;background:var(--navy) center/cover no-repeat;padding:120px 16px 100px}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,29,51,.55),rgba(11,29,51,.2) 45%,rgba(11,29,51,.85))}
+.hero-content{position:relative;max-width:760px;width:100%}
+.logo-card{width:min(300px,72vw);margin:0 auto 18px;background:rgba(255,255,255,.96);border-radius:26px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 0 2px rgba(201,162,75,.6);animation:float 4s ease-in-out infinite}
+.logo-card img{width:100%;border-radius:12px}
+.bg-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bg-list img{width:100%;height:70px;object-fit:cover;border-radius:10px;cursor:pointer;border:3px solid transparent}
+.bg-list img.sel{border-color:var(--gold)}
+.logo-prev{width:120px;background:#fff;border-radius:12px;padding:6px;border:1px solid #eee}
+@keyframes float{50%{transform:translateY(-10px)}}
+.hero .tag{letter-spacing:3px;color:var(--gold2);font-size:15px}
+.hero h1{font-family:'Reem Kufi';font-size:clamp(70px,18vw,140px);line-height:1.15;background:linear-gradient(180deg,#f7e7b4,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 8px 30px rgba(201,162,75,.35))}
+.hero p{font-size:clamp(17px,4.5vw,22px);opacity:.95;text-shadow:0 2px 12px rgba(0,0,0,.6);margin:6px 0 28px}
+.btn{display:inline-block;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:16px;padding:13px 28px;border-radius:50px;transition:.25s;text-align:center}
+.btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy);box-shadow:0 8px 25px rgba(201,162,75,.35)}
+.btn-gold:hover{transform:translateY(-3px)}
+.btn-outline{border:2px solid var(--gold2);color:#fff;background:transparent}
+.btn-outline:hover{background:var(--gold2);color:var(--navy)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.search{margin:30px auto 0;display:flex;background:#fff;border-radius:50px;padding:6px;max-width:520px}
+.search input{flex:1;min-width:0;border:none;outline:none;padding:10px 16px;font-family:inherit;font-size:15px;background:none}
+.search .btn{padding:10px 22px}
+
+/* ===== الإحصائيات ===== */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-60px;position:relative;z-index:5}
+.stat{background:#fff;border-radius:var(--radius);padding:22px 10px;text-align:center;box-shadow:0 10px 30px rgba(11,29,51,.1);border-bottom:4px solid var(--gold)}
+.stat b{display:block;font-size:36px;color:var(--navy);font-weight:800;line-height:1.3}
+.stat span{color:var(--muted);font-size:14px}
+@media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== الأقسام ===== */
+section{padding:80px 0}
+.title{text-align:center;margin-bottom:34px}
+.title small{color:var(--gold);font-weight:700;letter-spacing:2px}
+.title h2{font-size:clamp(28px,6vw,40px);color:var(--navy)}
+.title h2::after{content:"";display:block;width:70px;height:4px;background:var(--gold);margin:8px auto 0;border-radius:4px}
+.filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+.filters button{border:2px solid var(--navy);background:none;color:var(--navy);padding:8px 18px;border-radius:50px;font-family:inherit;font-weight:700;cursor:pointer;font-size:15px}
+.filters button.active{background:var(--navy);color:var(--gold2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+.card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:0 8px 25px rgba(11,29,51,.08);transition:.3s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 35px rgba(11,29,51,.15)}
+.card-img{position:relative;height:210px;overflow:hidden;cursor:pointer;background:#ddd}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.card:hover .card-img img{transform:scale(1.08)}
+.status{position:absolute;top:12px;right:12px;padding:3px 14px;border-radius:50px;color:#fff;font-size:13px;font-weight:700}
+.st-available{background:var(--green)}.st-reserved{background:var(--orange)}.st-sold{background:var(--red)}
+.fav{position:absolute;top:10px;left:10px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.92);font-size:19px;cursor:pointer}
+.card-body{padding:18px;flex:1;display:flex;flex-direction:column}
+.card-body h3{color:var(--navy);font-size:19px}
+.loc{color:var(--muted);font-size:14px}
+.feats{display:flex;gap:14px;margin:10px 0;font-size:14px;flex-wrap:wrap}
+.price{font-size:22px;font-weight:800;color:var(--gold);margin-top:auto}
+.card-actions{display:flex;gap:8px;margin-top:12px}
+.card-actions .btn{flex:1;padding:10px;font-size:14px}
+.empty{text-align:center;color:var(--muted);padding:40px;grid-column:1/-1}
+
+/* ===== من نحن ===== */
+.about{background:var(--navy);color:#fff}
+.about .title h2{color:#fff}
+.about-text{text-align:center;max-width:700px;margin:0 auto 34px;opacity:.88;font-size:17px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.feature{background:var(--navy2);border:1px solid rgba(201,162,75,.25);border-radius:var(--radius);padding:26px;text-align:center;transition:.3s}
+.feature:hover{border-color:var(--gold);transform:translateY(-4px)}
+.feature div{font-size:40px}
+.feature h4{color:var(--gold2);font-size:19px;margin:6px 0}
+.feature p{opacity:.8;font-size:15px}
+
+/* ===== التواصل ===== */
+.contact-box{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:768px){.contact-box{grid-template-columns:1fr}}
+.info{background:var(--navy);color:#fff;border-radius:var(--radius);padding:28px}
+.info h3{color:var(--gold2);margin-bottom:10px}
+.info a,.info p{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.form-card{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:0 8px 25px rgba(11,29,51,.08)}
+.form-card h3{color:var(--navy);margin-bottom:10px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.field{width:100%;padding:13px 14px;border:1.5px solid #dcd6c8;border-radius:12px;font-family:inherit;font-size:15px;background:#fff;outline:none;color:var(--text)}
+.field:focus{border-color:var(--gold)}
+textarea.field{min-height:90px;resize:vertical}
+label{font-size:14px;font-weight:700;color:var(--navy)}
+
+/* ===== الفوتر ===== */
+footer{background:#071322;color:#c8cdd4;text-align:center;padding:36px 16px 90px}
+footer .brand{justify-content:center;margin-bottom:8px}
+.socials{display:flex;gap:10px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.socials a{background:var(--navy2);border:1px solid var(--gold);color:var(--gold2);padding:6px 16px;border-radius:50px;font-size:14px}
+
+/* ===== واتساب ===== */
+.wa{position:fixed;bottom:20px;left:20px;width:60px;height:60px;border-radius:50%;background:#25d366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 0 rgba(37,211,102,.6);z-index:40;animation:pulse 2s infinite}
+.wa svg{width:32px;height:32px;fill:#fff}
+@keyframes pulse{70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+
+/* ===== النوافذ ===== */
+.modal{position:fixed;inset:0;background:rgba(7,19,34,.82);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.modal-box{background:#fff;width:100%;max-width:700px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:22px;animation:up .3s}
+@media(min-width:768px){.modal{align-items:center}.modal-box{border-radius:22px}}
+@keyframes up{from{transform:translateY(60px);opacity:0}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal-head h3{color:var(--navy)}
+.close{border:none;background:var(--light);width:38px;height:38px;border-radius:50%;font-size:22px;cursor:pointer;flex-shrink:0}
+.detail-img{width:100%;height:240px;object-fit:cover;border-radius:14px;margin-bottom:14px}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.detail-grid div{background:var(--light);border-radius:12px;padding:10px;text-align:center;font-size:14px}
+.detail-grid b{display:block;color:var(--navy);font-size:17px}
+.tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto}
+.tabs button{flex:1;padding:10px;border:none;border-radius:10px;background:var(--light);font-family:inherit;font-weight:700;cursor:pointer;white-space:nowrap;font-size:14px}
+.tabs button.active{background:var(--navy);color:var(--gold2)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid #eee;border-radius:12px;margin-bottom:8px}
+.mini img{width:60px;height:60px;object-fit:cover;border-radius:10px}
+.mini .txt{flex:1;font-size:14px;min-width:0}
+.mini button{border:none;padding:7px 11px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700}
+.preview{width:100%;height:160px;object-fit:cover;border-radius:12px;display:none}
+.hint{font-size:13px;color:var(--muted)}
+.toast{position:fixed;bottom:95px;left:50%;transform:translate(-50%,30px);background:var(--navy);color:var(--gold2);padding:12px 22px;border-radius:50px;opacity:0;transition:.3s;z-index:200;pointer-events:none;font-weight:700;border:1px solid var(--gold);text-align:center;width:max-content;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.hidden-sec{display:none!important}
+body.editing [data-k]{outline:2px dashed var(--gold);outline-offset:3px;cursor:text;border-radius:4px}
+body.editing [data-k]:focus{outline-style:solid;background:rgba(201,162,75,.18)}
+.edit-bar{position:fixed;top:0;left:0;right:0;z-index:300;background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy);display:none;padding:9px;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;font-weight:800;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+body.editing .edit-bar{display:flex}
+.edit-bar button{border:none;border-radius:50px;padding:7px 16px;font-family:inherit;font-weight:700;cursor:pointer}
+.switch-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid #eee;border-radius:12px;font-weight:500}
+.switch-row input{width:22px;height:22px;accent-color:var(--gold)}
+.colors{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=color]{width:100%;height:46px;border:1px solid #eee;border-radius:10px;padding:2px;background:#fff}
+.tap-ring{position:fixed;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;pointer-events:none;z-index:999;border:2px solid var(--gold2);background:radial-gradient(circle,rgba(230,200,122,.45),rgba(230,200,122,0) 70%);animation:ring .55s ease-out forwards}
+@keyframes ring{to{transform:scale(5);opacity:0}}
+.pressed{transform:scale(.95)!important;transition:transform .08s!important}
+.reveal{opacity:0;transform:translateY(30px);transition:.8s}
+.reveal.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- ===== الهيدر ===== -->
+<header id="header">
+  <div class="container nav">
+    <a href="#home" class="brand"><img class="logo-icon" alt="عواصم"><b>عواصم</b></a>
+    <nav class="links">
+      <a href="#home">الرئيسية</a>
+      <a href="#apartments">الشقق</a>
+      <a href="#about">من نحن</a>
+      <a href="#contact">تواصل معنا</a>
+    </nav>
+    <div class="nav-btns">
+      <button class="icon-btn" onclick="toggleFavs()">❤️<span class="badge" id="favCount">0</span></button>
+      <button class="icon-btn" onclick="openOwner()">🔑 المالك</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== الواجهة ===== -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="logo-card"><img class="logo-full" alt="عواصم للتطوير العقاري"></div>
+    <div class="tag">للتطوير والاستثمار العقاري</div>
+    <p>بيتك الجديد يبدأ من هنا… شقق فاخرة بمواقع مميزة</p>
+    <div class="hero-btns">
+      <a href="#apartments" class="btn btn-gold">تصفّح الشقق</a>
+      <a href="#contact" class="btn btn-outline">احجز الآن</a>
+    </div>
+    <div class="search">
+      <input id="searchInput" placeholder="ابحث بالحي أو رقم الشقة...">
+      <button class="btn btn-gold" onclick="goSearch()">بحث</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== الإحصائيات ===== -->
+<div class="container">
+  <div class="stats">
+    <div class="stat"><b id="sAvailable">0</b><span>شقة متاحة</span></div>
+    <div class="stat"><b id="sReserved">0</b><span>شقة محجوزة</span></div>
+    <div class="stat"><b id="sSold">0</b><span>شقة مباعة</span></div>
+    <div class="stat"><b id="sClients">0</b><span>عميل مسجّل</span></div>
+  </div>
+</div>
+
+<!-- ===== الشقق ===== -->
+<section id="apartments">
+  <div class="container">
+    <div class="title reveal"><small>مشاريعنا</small><h2 id="aptTitle">الشقق المتوفرة</h2></div>
+    <div class="filters" id="filters">
+      <button class="active" data-f="all">الكل</button>
+      <button data-f="available">متاحة</button>
+      <button data-f="reserved">محجوزة</button>
+      <button data-f="sold">مباعة</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- ===== من نحن ===== -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="title reveal"><small>تعرّف علينا</small><h2>لماذا عواصم؟</h2></div>
+    <p class="about-text reveal">عواصم للعقارات… خبرة وثقة في بيع وتأجير الشقق السكنية. نختار لك أفضل المواقع ونرافقك خطوة بخطوة حتى تستلم مفتاح بيتك.</p>
+    <div class="features">
+      <div class="feature reveal"><div>🏆</div><h4>خبرة وثقة</h4><p>سنوات من العمل في المقاولات والعقار</p></div>
+      <div class="feature reveal"><div>📍</div><h4>مواقع مميزة</h4><p>أحياء راقية قريبة من كل الخدمات</p></div>
+      <div class="feature reveal"><div>💎</div><h4>تشطيب فاخر</h4><p>جودة عالية في كل تفصيلة</p></div>
+      <div class="feature reveal"><div>🤝</div><h4>متابعة كاملة</h4><p>معك من أول زيارة حتى الاستلام</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== التواصل ===== -->
+<section id="contact">
+  <div class="container">
+    <div class="title reveal"><small>نحن بخدمتك</small><h2>تواصل معنا</h2></div>
+    <div class="contact-box">
+      <div class="info reveal">
+        <h3>معلومات التواصل</h3>
+        <a id="callLink" href="#">📞 <span id="phoneText"></span></a>
+        <a id="waLink" href="#" target="_blank">💬 تواصل عبر واتساب</a>
+        <p>🕘 يومياً من 9 صباحاً حتى 10 مساءً</p>
+        <div class="socials" id="socials1"></div>
+      </div>
+      <div class="form-card reveal">
+        <h3>سجّل اهتمامك</h3>
+        <form class="stack" id="clientForm">
+          <input class="field" id="cName" placeholder="الاسم الكامل" required>
+          <input class="field" id="cPhone" type="tel" placeholder="رقم الجوال" required>
+          <select class="field" id="cApt"></select>
+          <textarea class="field" id="cMsg" placeholder="رسالتك (اختياري)"></textarea>
+          <button class="btn btn-gold" type="submit">إرسال الطلب</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== الفوتر ===== -->
+<footer>
+  <div class="brand"><img class="logo-icon" alt="عواصم"><b>عواصم</b></div>
+  <p>للتطوير والاستثمار العقاري</p>
+  <div class="socials" id="socials2"></div>
+  <p>© <span id="year"></span> جميع الحقوق محفوظة – عواصم للعقارات</p>
+</footer>
+
+<!-- زر واتساب -->
+<a class="wa" id="waFloat" href="#" target="_blank" aria-label="واتساب">
+  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-.7-.3-1.4-.7-2-1.3-.5-.5-1-1.1-1.3-1.7-.1-.2 0-.4.1-.5l.4-.5.3-.4v-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.6.6-.9 1.4-.9 2.2.1 1 .5 2 1.1 2.8 1.2 1.7 2.7 3 4.6 3.8.5.2 1 .4 1.5.5.6.2 1.2.1 1.7-.1.6-.3 1-.8 1.2-1.4.1-.3.1-.6 0-.9l-.5-.4z"/></svg>
+</a>
+
+<!-- نافذة التفاصيل -->
+<div class="modal" id="detailModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="dTitle"></h3><button class="close" onclick="closeModal('detailModal')">×</button></div>
+    <div id="dBody"></div>
+  </div>
+</div>
+
+<!-- نافذة المالك -->
+<div class="modal" id="ownerModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>🔑 لوحة المالك</h3><button class="close" onclick="closeModal('ownerModal')">×</button></div>
+    <div id="ownerBody"></div>
+  </div>
+</div>
+
+<div class="edit-bar">✏️ وضع التعديل الحر – اكبس على أي نص
+  <button style="background:var(--navy);color:#fff" onclick="saveEdit()">💾 حفظ</button>
+  <button style="background:#fff;color:var(--navy)" onclick="cancelEdit()">❌ إلغاء</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========== البيانات الافتراضية =========== */
+const KEY = "awasim_v2";
+const defaults = {
+  password: "1234",
+  phone: "0500000000",
+  whatsapp: "966500000000",
+  instagram: "", snapchat: "", tiktok: "", x: "",
+  bg: "default",
+  logo: "",
+  texts: {}, colors: {}, hide: {}, sound: true, soundType: "drop",
+  apartments: [
+    {id:1,num:"101",region:"حي النرجس",rooms:3,baths:2,area:150,price:650000,status:"available",img:"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",details:"شقة فاخرة بتشطيب حديث، مطبخ راكب، موقف خاص، قريبة من المسجد والمدارس."},
+    {id:2,num:"102",region:"حي الملقا",rooms:4,baths:3,area:190,price:820000,status:"reserved",img:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",details:"إطلالة رائعة، صالة واسعة، غرفة خادمة، قريبة من الخدمات."},
+    {id:3,num:"201",region:"حي الياسمين",rooms:2,baths:2,area:110,price:480000,status:"available",img:"https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800",details:"مناسبة للعائلات الصغيرة، تصميم عصري وإضاءة طبيعية."},
+    {id:4,num:"301",region:"حي العارض",rooms:5,baths:4,area:240,price:1150000,status:"sold",img:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",details:"شقة دوبلكس فاخرة مع سطح خاص."}
+  ],
+  clients: []
+};
+const NO_IMG = "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800";
+
+/* =========== الحفظ والتحميل =========== */
+function load(){
+  try{ const d = JSON.parse(localStorage.getItem(KEY)); if(d) return Object.assign(JSON.parse(JSON.stringify(defaults)), d); }catch(e){}
+  return JSON.parse(JSON.stringify(defaults));
+}
+let data = load();
+if(data.bg === "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600") data.bg = "default";
+const bgSrc = u => u === "default" ? BG_MAIN : u;
+let favs = [];
+try{ favs = JSON.parse(localStorage.getItem("awasim_favs")) || []; }catch(e){}
+
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(data)); return true; }
+  catch(e){ toast("⚠️ الذاكرة ممتلئة، احذف بعض الصور أو استخدم صور أصغر"); return false; }
+}
+function saveFavs(){ try{ localStorage.setItem("awasim_favs", JSON.stringify(favs)); }catch(e){} }
+
+/* =========== أدوات مساعدة =========== */
+const ST = {available:"متاحة", reserved:"محجوزة", sold:"مباعة"};
+const money = n => Number(n||0).toLocaleString("en-US") + " ريال";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $ = id => document.getElementById(id);
+const waUrl = msg => "https://wa.me/" + data.whatsapp + (msg ? "?text=" + encodeURIComponent(msg) : "");
+
+function toast(msg){
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2600);
+}
+function openModal(id){ $(id).classList.add("open"); document.body.style.overflow = "hidden"; }
+function closeModal(id){ $(id).classList.remove("open"); document.body.style.overflow = ""; }
+document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if(e.target === m) closeModal(m.id); }));
+
+/* ضغط الصور قبل الحفظ حتى لا تمتلئ الذاكرة */
+function compress(file, max, cb){
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = img.width * s; c.height = img.height * s;
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      cb(c.toDataURL("image/jpeg", 0.75));
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+/* =========== الشعار =========== */
+const LOGO_FULL = "logo.jpg";
+const LOGO_ICON = "icon.jpg";
+const BG_MAIN = "bg.jpg";
+const BGS = [
+  "default",
+  "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600",
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600",
+  "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600",
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600",
+  "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=1600"
+];
+
+/* =========== تطبيق الإعدادات =========== */
+function socialLinks(){
+  const u = v => String(v||"").replace(/^@/, "").trim();
+  let h = "";
+  if(data.instagram) h += `<a href="https://instagram.com/${esc(u(data.instagram))}" target="_blank">انستقرام</a>`;
+  if(data.snapchat)  h += `<a href="https://snapchat.com/add/${esc(u(data.snapchat))}" target="_blank">سناب شات</a>`;
+  if(data.tiktok)    h += `<a href="https://tiktok.com/@${esc(u(data.tiktok))}" target="_blank">تيك توك</a>`;
+  if(data.x)         h += `<a href="https://x.com/${esc(u(data.x))}" target="_blank">إكس</a>`;
+  return h;
+}
+function applySettings(){
+  document.querySelectorAll(".logo-full").forEach(e => e.src = data.logo || LOGO_FULL);
+  document.querySelectorAll(".logo-icon").forEach(e => e.src = data.logo || LOGO_ICON);
+  document.querySelector(".hero").style.backgroundImage = `url("${bgSrc(data.bg)}")`;
+  $("phoneText").textContent = data.phone;
+  $("callLink").href = "tel:" + data.phone;
+  $("waLink").href = waUrl("السلام عليكم، أرغب بالاستفسار عن شقق عواصم");
+  $("waFloat").href = waUrl("السلام عليكم، أرغب بالاستفسار عن شقق عواصم");
+  $("socials1").innerHTML = $("socials2").innerHTML = socialLinks();
+  $("year").textContent = new Date().getFullYear();
+}
+
+/* =========== الإحصائيات =========== */
+function countUp(id, to){
+  const el = $(id); let n = 0; const step = Math.max(1, Math.ceil(to / 25));
+  clearInterval(el._t);
+  if(to === 0){ el.textContent = 0; return; }
+  el._t = setInterval(() => { n += step; if(n >= to){ n = to; clearInterval(el._t); } el.textContent = n; }, 40);
+}
+function renderStats(){
+  const c = s => data.apartments.filter(a => a.status === s).length;
+  countUp("sAvailable", c("available"));
+  countUp("sReserved", c("reserved"));
+  countUp("sSold", c("sold"));
+  countUp("sClients", data.clients.length);
+}
+
+/* =========== عرض الشقق =========== */
+let filter = "all", query = "", onlyFavs = false;
+
+function renderCards(){
+  const list = data.apartments.filter(a =>
+    (filter === "all" || a.status === filter) &&
+    (!onlyFavs || favs.includes(a.id)) &&
+    (!query || (a.region + " " + a.num).includes(query))
+  );
+  $("aptTitle").textContent = onlyFavs ? "شققي المفضلة ❤️" : "الشقق المتوفرة";
+  $("grid").innerHTML = list.length ? list.map(a => `
+    <div class="card">
+      <div class="card-img" onclick="showDetails(${a.id})">
+        <img src="${esc(a.img || NO_IMG)}" alt="شقة ${esc(a.num)}" loading="lazy">
+        <span class="status st-${a.status}">${ST[a.status]}</span>
+        <button class="fav" onclick="event.stopPropagation();toggleFav(${a.id})">${favs.includes(a.id) ? "❤️" : "🤍"}</button>
+      </div>
+      <div class="card-body">
+        <h3>شقة رقم ${esc(a.num)}</h3>
+        <div class="loc">📍 ${esc(a.region)}</div>
+        <div class="feats"><span>🛏️ ${esc(a.rooms)} غرف</span><span>🛁 ${esc(a.baths || 1)} حمام</span><span>📐 ${esc(a.area)} م²</span></div>
+        <div class="price">${money(a.price)}</div>
+        <div class="card-actions">
+          <button class="btn btn-navy" onclick="showDetails(${a.id})">التفاصيل</button>
+          ${a.status === "sold" ? `<button class="btn" style="background:#eee;color:#999" disabled>مباعة</button>`
+            : `<button class="btn btn-gold" onclick="interest(${a.id})">أنا مهتم</button>`}
+        </div>
+      </div>
+    </div>`).join("")
+    : `<div class="empty">${onlyFavs ? "ما في شقق بالمفضلة بعد 🤍" : "لا توجد شقق مطابقة"}</div>`;
+  $("favCount").textContent = favs.length;
+  fillAptSelect();
+}
+
+$("filters").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#filters button").forEach(x => x.classList.remove("active"));
+  b.classList.add("active"); filter = b.dataset.f; renderCards();
+});
+function goSearch(){
+  query = $("searchInput").value.trim(); renderCards();
+  location.hash = ""; $("apartments").scrollIntoView();
+}
+$("searchInput").addEventListener("keydown", e => { if(e.key === "Enter") goSearch(); });
+
+function toggleFav(id){
+  favs = favs.includes(id) ? favs.filter(x => x !== id) : [...favs, id];
+  saveFavs(); renderCards();
+  toast(favs.includes(id) ? "أُضيفت للمفضلة ❤️" : "أُزيلت من المفضلة");
+}
+function toggleFavs(){
+  onlyFavs = !onlyFavs; renderCards(); $("apartments").scrollIntoView();
+}
+
+/* =========== التفاصيل =========== */
+function showDetails(id){
+  const a = data.apartments.find(x => x.id === id); if(!a) return;
+  $("dTitle").textContent = "شقة رقم " + a.num;
+  $("dBody").innerHTML = `
+    <img class="detail-img" src="${esc(a.img || NO_IMG)}" alt="">
+    <span class="status st-${a.status}" style="position:static;display:inline-block">${ST[a.status]}</span>
+    <p class="loc" style="margin-top:8px">📍 ${esc(a.region)}</p>
+    <div class="detail-grid">
+      <div><b>${esc(a.rooms)}</b>غرف</div>
+      <div><b>${esc(a.baths || 1)}</b>حمامات</div>
+      <div><b>${esc(a.area)}</b>م²</div>
+    </div>
+    <p>${esc(a.details)}</p>
+    <div class="price" style="margin:12px 0">${money(a.price)}</div>
+    <div class="card-actions">
+      <a class="btn btn-gold" target="_blank" href="${waUrl("السلام عليكم، أرغب بالاستفسار عن الشقة رقم " + a.num + " في " + a.region)}">💬 واتساب</a>
+      <a class="btn btn-navy" href="tel:${esc(data.phone)}">📞 اتصال</a>
+    </div>`;
+  openModal("detailModal");
+}
+
+/* =========== نموذج العملاء =========== */
+function fillAptSelect(){
+  const cur = $("cApt").value;
+  $("cApt").innerHTML = `<option value="">اختر الشقة (اختياري)</option>` +
+    data.apartments.filter(a => a.status !== "sold")
+      .map(a => `<option value="${esc(a.num)}">شقة ${esc(a.num)} – ${esc(a.region)}</option>`).join("");
+  $("cApt").value = cur;
+}
+function interest(id){
+  const a = data.apartments.find(x => x.id === id);
+  closeModal("detailModal");
+  $("cApt").value = a.num;
+  $("contact").scrollIntoView();
+  setTimeout(() => $("cName").focus(), 600);
+}
+$("clientForm").addEventListener("submit", e => {
+  e.preventDefault();
+  data.clients.push({
+    id: Date.now(), name: $("cName").value.trim(), phone: $("cPhone").value.trim(),
+    apt: $("cApt").value, msg: $("cMsg").value.trim(),
+    date: new Date().toLocaleString("ar-SA")
+  });
+  if(save()){
+    e.target.reset(); renderStats();
+    toast("✅ تم تسجيل طلبك، سنتواصل معك قريباً");
+  }
+});
+
+/* =========== وضع المالك =========== */
+let isOwner = false, editingId = null, tempImg = null, tempBg = null, tempLogo = null;
+
+function openOwner(){
+  if(isOwner){ showPanel("apts"); } else {
+    $("ownerBody").innerHTML = `
+      <div class="stack">
+        <label>أدخل كلمة السر</label>
+        <input class="field" id="pass" type="password" placeholder="كلمة السر">
+        <button class="btn btn-gold" onclick="login()">دخول</button>
+        <p class="hint">كلمة السر الافتراضية: 1234 (غيّرها من الإعدادات)</p>
+      </div>`;
+    setTimeout(() => { const p = $("pass"); p.focus(); p.onkeydown = e => { if(e.key === "Enter") login(); }; }, 100);
+  }
+  openModal("ownerModal");
+}
+function login(){
+  if($("pass").value === data.password){ isOwner = true; showPanel("apts"); toast("أهلاً بك 👋"); }
+  else toast("❌ كلمة السر غير صحيحة");
+}
+
+function tabsHtml(t){
+  const tabs = [["apts","🏢 الشقق"],["edit","➕ إضافة"],["settings","⚙️ الإعدادات"],["design","🎨 التصميم"],["clients","👥 العملاء"]];
+  return `<div class="tabs">${tabs.map(([k,v]) => `<button class="${t===k?"active":""}" onclick="${k==="edit"?"editApt(null)":`showPanel('${k}')`}">${v}</button>`).join("")}</div>`;
+}
+
+function showPanel(tab){
+  let h = tabsHtml(tab);
+
+  if(tab === "apts"){
+    h += data.apartments.length ? data.apartments.map(a => `
+      <div class="mini">
+        <img src="${esc(a.img || NO_IMG)}" alt="">
+        <div class="txt"><b>شقة ${esc(a.num)}</b> – ${esc(a.region)}<br>${money(a.price)} · <span style="color:${a.status==="available"?"var(--green)":a.status==="reserved"?"var(--orange)":"var(--red)"}">${ST[a.status]}</span></div>
+        <button style="background:var(--navy);color:#fff" onclick="editApt(${a.id})">تعديل</button>
+        <button style="background:var(--red);color:#fff" onclick="delApt(${a.id})">حذف</button>
+      </div>`).join("") : `<p class="empty">لا توجد شقق، أضف أول شقة من تبويب "إضافة"</p>`;
+  }
+
+  if(tab === "settings"){
+    h += `<div class="stack">
+      <label>شعار الموقع</label>
+      <img class="logo-prev" id="logoPrev" src="${esc(data.logo || LOGO_FULL)}" alt="">
+      <input class="field" type="file" accept="image/*" onchange="pickLogo(this)">
+      <button class="btn" style="background:var(--light)" onclick="tempLogo='';$('logoPrev').src=LOGO_FULL">↩️ إرجاع الشعار الأصلي</button>
+      <label>خلفية الموقع (اختر وحدة أو ارفع صورة من جوالك)</label>
+      <div class="bg-list">${BGS.map(u => `<img src="${u === "default" ? BG_MAIN : u.replace("w=1600","w=300")}" class="${data.bg===u?"sel":""}" onclick="chooseBg(this,'${u}')" alt="">`).join("")}</div>
+      <img class="preview" id="bgPrev" alt="">
+      <input class="field" type="file" accept="image/*" onchange="pickBg(this)">
+      <input class="field" id="sBgUrl" placeholder="أو الصق رابط صورة">
+      <label>رقم الهاتف</label>
+      <input class="field" id="sPhone" value="${esc(data.phone)}">
+      <label>رقم الواتساب (بدون + ويبدأ بـ 966)</label>
+      <input class="field" id="sWa" value="${esc(data.whatsapp)}" placeholder="966500000000">
+      <label>حسابات التواصل (اسم المستخدم فقط)</label>
+      <div class="row">
+        <input class="field" id="sInsta" value="${esc(data.instagram)}" placeholder="انستقرام">
+        <input class="field" id="sSnap" value="${esc(data.snapchat)}" placeholder="سناب شات">
+        <input class="field" id="sTik" value="${esc(data.tiktok)}" placeholder="تيك توك">
+        <input class="field" id="sX" value="${esc(data.x)}" placeholder="إكس">
+      </div>
+      <label>كلمة سر جديدة (اتركها فارغة إذا ما بدك تغيّرها)</label>
+      <input class="field" id="sPass" type="password">
+      <button class="btn btn-gold" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+      <button class="btn btn-navy" onclick="logout()">🚪 تسجيل الخروج</button>
+      <button class="btn btn-red" onclick="resetAll()">🔄 إرجاع الموقع للوضع الأصلي</button>
+    </div>`;
+  }
+
+  if(tab === "design"){
+    const c = data.colors || {}, hd = data.hide || {};
+    h += `<div class="stack">
+      <button class="btn btn-gold" onclick="startEdit()">✏️ ابدأ التعديل الحر على النصوص</button>
+      <p class="hint">بتكبس على أي عنوان أو كلمة بالموقع وبتكتب مكانها اللي بدك ياه، وبعدين بتكبس 💾 حفظ فوق.</p>
+      <button class="btn" style="background:var(--light)" onclick="resetTexts()">↩️ إرجاع النصوص الأصلية</button>
+      <label>ألوان الموقع</label>
+      <div class="colors">
+        <div><label>اللون الأساسي</label><input type="color" id="cNavy" value="${c.navy || "#0b1d33"}" oninput="previewColors()"></div>
+        <div><label>اللون الذهبي</label><input type="color" id="cGold" value="${c.gold || "#c9a24b"}" oninput="previewColors()"></div>
+      </div>
+      <label>المؤثرات</label>
+      <label class="switch-row">🔊 صوت الضغط<input type="checkbox" id="h_sound" ${data.sound === false ? "" : "checked"} onchange="data.sound=this.checked;save();toast(this.checked?'تم تشغيل الصوت':'تم إيقاف الصوت')"></label>
+      <label>نوع الصوت (بتسمعه لما تختار)</label>
+      <select class="field" onchange="data.soundType=this.value;save();tapSound(this.value);toast('تم تغيير الصوت')">
+        ${SOUNDS.map(([k, n]) => `<option value="${k}" ${(data.soundType || "drop") === k ? "selected" : ""}>${n}</option>`).join("")}
+      </select>
+      <label>إظهار وإخفاء الأقسام</label>
+      ${SECTIONS.map(([k, , n]) => `<label class="switch-row">${n}<input type="checkbox" id="h_${k}" ${hd[k] ? "" : "checked"}></label>`).join("")}
+      <button class="btn btn-gold" onclick="saveDesign()">💾 حفظ التصميم</button>
+      <button class="btn" style="background:var(--light)" onclick="resetDesign()">↩️ إرجاع التصميم الأصلي</button>
+    </div>`;
+  }
+
+  if(tab === "clients"){
+    h += `<p style="margin-bottom:10px"><b>عدد العملاء: ${data.clients.length}</b></p>`;
+    h += data.clients.length ? data.clients.slice().reverse().map(c => `
+      <div class="mini">
+        <div class="txt"><b>${esc(c.name)}</b> – <a href="tel:${esc(c.phone)}" style="color:var(--gold)">${esc(c.phone)}</a><br>
+        ${c.apt ? "شقة " + esc(c.apt) + " · " : ""}<span class="hint">${esc(c.date)}</span>
+        ${c.msg ? `<br>📝 ${esc(c.msg)}` : ""}</div>
+        <a href="https://wa.me/${esc(c.phone.replace(/^0/,"966").replace(/\D/g,""))}" target="_blank"><button style="background:#25d366;color:#fff">واتساب</button></a>
+        <button style="background:var(--red);color:#fff" onclick="delClient(${c.id})">حذف</button>
+      </div>`).join("") : `<p class="empty">لا يوجد عملاء مسجلين بعد</p>`;
+  }
+
+  $("ownerBody").innerHTML = h;
+}
+
+function editApt(id){
+  editingId = id; tempImg = null;
+  const a = data.apartments.find(x => x.id === id) || {num:"",region:"",rooms:3,baths:2,area:"",price:"",status:"available",img:"",details:""};
+  $("ownerBody").innerHTML = tabsHtml("edit") + `
+    <div class="stack">
+      <h4 style="color:var(--navy)">${id ? "تعديل شقة " + esc(a.num) : "إضافة شقة جديدة"}</h4>
+      <label>صورة الشقة</label>
+      <img class="preview" id="imgPrev" src="${esc(a.img)}" style="display:${a.img?"block":"none"}" alt="">
+      <input class="field" type="file" accept="image/*" onchange="pickImg(this)">
+      <input class="field" id="fImgUrl" placeholder="أو الصق رابط صورة">
+      <div class="row">
+        <div><label>رقم الشقة</label><input class="field" id="fNum" value="${esc(a.num)}"></div>
+        <div><label>المنطقة / الحي</label><input class="field" id="fRegion" value="${esc(a.region)}"></div>
+        <div><label>عدد الغرف</label><input class="field" id="fRooms" type="number" value="${esc(a.rooms)}"></div>
+        <div><label>عدد الحمامات</label><input class="field" id="fBaths" type="number" value="${esc(a.baths || 1)}"></div>
+        <div><label>المساحة م²</label><input class="field" id="fArea" type="number" value="${esc(a.area)}"></div>
+        <div><label>السعر (ريال)</label><input class="field" id="fPrice" type="number" value="${esc(a.price)}"></div>
+      </div>
+      <label>الحالة</label>
+      <select class="field" id="fStatus">
+        <option value="available" ${a.status==="available"?"selected":""}>متاحة</option>
+        <option value="reserved" ${a.status==="reserved"?"selected":""}>محجوزة</option>
+        <option value="sold" ${a.status==="sold"?"selected":""}>مباعة</option>
+      </select>
+      <label>تفاصيل الشقة</label>
+      <textarea class="field" id="fDetails">${esc(a.details)}</textarea>
+      <button class="btn btn-gold" onclick="saveApt()">💾 حفظ الشقة</button>
+    </div>`;
+}
+function pickImg(input){
+  if(!input.files[0]) return;
+  compress(input.files[0], 1000, url => { tempImg = url; const p = $("imgPrev"); p.src = url; p.style.display = "block"; });
+}
+function saveApt(){
+  const num = $("fNum").value.trim(), region = $("fRegion").value.trim();
+  if(!num || !region){ toast("اكتب رقم الشقة والمنطقة"); return; }
+  const old = data.apartments.find(x => x.id === editingId);
+  const obj = {
+    num, region,
+    rooms: +$("fRooms").value || 0, baths: +$("fBaths").value || 1,
+    area: +$("fArea").value || 0, price: +$("fPrice").value || 0,
+    status: $("fStatus").value, details: $("fDetails").value.trim(),
+    img: tempImg || $("fImgUrl").value.trim() || (old && old.img) || NO_IMG
+  };
+  if(old) Object.assign(old, obj);
+  else data.apartments.push({id: Date.now(), ...obj});
+  if(save()){ renderAll(); showPanel("apts"); toast("✅ تم حفظ الشقة"); }
+}
+function delApt(id){
+  if(!confirm("متأكد بدك تحذف هالشقة؟")) return;
+  data.apartments = data.apartments.filter(a => a.id !== id);
+  favs = favs.filter(f => f !== id); saveFavs();
+  save(); renderAll(); showPanel("apts"); toast("تم الحذف");
+}
+function delClient(id){
+  if(!confirm("حذف هذا العميل؟")) return;
+  data.clients = data.clients.filter(c => c.id !== id);
+  save(); renderStats(); showPanel("clients");
+}
+function pickBg(input){
+  if(!input.files[0]) return;
+  compress(input.files[0], 1600, url => { tempBg = url; const p = $("bgPrev"); p.src = url; p.style.display = "block"; });
+}
+function chooseBg(el, url){
+  document.querySelectorAll(".bg-list img").forEach(i => i.classList.remove("sel"));
+  el.classList.add("sel"); tempBg = url;
+  const p = $("bgPrev"); p.src = bgSrc(url); p.style.display = "block";
+}
+function pickLogo(input){
+  if(!input.files[0]) return;
+  compress(input.files[0], 600, url => { tempLogo = url; $("logoPrev").src = url; });
+}
+function saveSettings(){
+  if(tempLogo !== null) data.logo = tempLogo;
+  tempLogo = null;
+  if(tempBg) data.bg = tempBg;
+  else if($("sBgUrl").value.trim()) data.bg = $("sBgUrl").value.trim();
+  data.phone = $("sPhone").value.trim() || data.phone;
+  data.whatsapp = $("sWa").value.replace(/\D/g, "") || data.whatsapp;
+  data.instagram = $("sInsta").value.trim();
+  data.snapchat = $("sSnap").value.trim();
+  data.tiktok = $("sTik").value.trim();
+  data.x = $("sX").value.trim();
+  if($("sPass").value) data.password = $("sPass").value;
+  tempBg = null;
+  if(save()){ applySettings(); toast("✅ تم حفظ الإعدادات"); }
+}
+function logout(){ isOwner = false; closeModal("ownerModal"); toast("تم تسجيل الخروج"); }
+function resetAll(){
+  if(!confirm("رح ترجع كل البيانات للأصل وتنحذف تعديلاتك. متأكد؟")) return;
+  data = JSON.parse(JSON.stringify(defaults)); save(); renderAll(); applySettings(); applyTexts(); applyDesign(); showPanel("apts");
+  toast("تم إرجاع الموقع للوضع الأصلي");
+}
+
+/* =========== التعديل الحر والتصميم =========== */
+const EDIT_SEL = ".brand b, .links a, .hero .tag, .hero p, .hero-btns a, .stat span, .title small, .title h2:not(#aptTitle), .about-text, .feature div, .feature h4, .feature p, .info h3, .info p, .form-card h3, #clientForm button, footer > p:first-of-type";
+const editEls = [...document.querySelectorAll(EDIT_SEL)];
+const origTexts = editEls.map(e => e.textContent);
+editEls.forEach((el, i) => el.dataset.k = "t" + i);
+const SECTIONS = [["search", ".search", "مربع البحث"], ["stats", ".stats", "الإحصائيات"], ["about", "#about", "قسم من نحن"], ["contact", "#contact", "قسم التواصل"], ["wa", "#waFloat", "زر الواتساب العائم"]];
+let snapshot = null;
+
+function applyTexts(){
+  const t = data.texts || {};
+  editEls.forEach((el, i) => { el.textContent = (t["t" + i] !== undefined) ? t["t" + i] : origTexts[i]; });
+}
+function lighten(hex, p){
+  const n = parseInt(hex.slice(1), 16), f = v => Math.round(v + (255 - v) * p / 100);
+  return "#" + [n >> 16, n >> 8 & 255, n & 255].map(v => f(v).toString(16).padStart(2, "0")).join("");
+}
+function setColors(navy, gold){
+  const r = document.documentElement.style;
+  if(navy){ r.setProperty("--navy", navy); r.setProperty("--navy2", lighten(navy, 12)); } else { r.removeProperty("--navy"); r.removeProperty("--navy2"); }
+  if(gold){ r.setProperty("--gold", gold); r.setProperty("--gold2", lighten(gold, 35)); } else { r.removeProperty("--gold"); r.removeProperty("--gold2"); }
+}
+function applyDesign(){
+  const c = data.colors || {}, hd = data.hide || {};
+  setColors(c.navy, c.gold);
+  SECTIONS.forEach(([k, sel]) => document.querySelector(sel).classList.toggle("hidden-sec", !!hd[k]));
+}
+function previewColors(){ setColors($("cNavy").value, $("cGold").value); }
+function saveDesign(){
+  data.colors = {navy: $("cNavy").value, gold: $("cGold").value};
+  data.hide = {};
+  SECTIONS.forEach(([k]) => { if(!$("h_" + k).checked) data.hide[k] = true; });
+  if(save()){ applyDesign(); toast("✅ تم حفظ التصميم"); }
+}
+function resetDesign(){
+  data.colors = {}; data.hide = {};
+  save(); applyDesign(); showPanel("design"); toast("تم إرجاع التصميم الأصلي");
+}
+function startEdit(){
+  closeModal("ownerModal");
+  snapshot = editEls.map(e => e.textContent);
+  document.body.classList.add("editing");
+  editEls.forEach(e => e.contentEditable = "true");
+  toast("✏️ اكبس على أي نص وعدّله");
+}
+function endEdit(){
+  document.body.classList.remove("editing");
+  editEls.forEach(e => e.removeAttribute("contenteditable"));
+}
+function saveEdit(){
+  data.texts = {};
+  editEls.forEach((el, i) => {
+    const v = el.textContent.trim();
+    if(v !== origTexts[i].trim()) data.texts["t" + i] = v;
+  });
+  if(save()){ endEdit(); applyTexts(); toast("✅ تم حفظ التعديلات"); }
+}
+function cancelEdit(){
+  editEls.forEach((el, i) => el.textContent = snapshot[i]);
+  endEdit(); toast("تم إلغاء التعديل");
+}
+function resetTexts(){
+  if(!confirm("ترجع كل النصوص لأصلها؟")) return;
+  data.texts = {}; save(); applyTexts(); toast("تم إرجاع النصوص الأصلية");
+}
+/* أثناء التعديل: الروابط والأزرار ما بتشتغل، وزر Enter ما بينزل سطر */
+document.addEventListener("click", e => {
+  if(document.body.classList.contains("editing") && e.target.closest("[data-k]")) e.preventDefault();
+}, true);
+document.addEventListener("keydown", e => {
+  if(e.key === "Enter" && document.body.classList.contains("editing") && e.target.closest("[data-k]")){ e.preventDefault(); e.target.blur(); }
+});
+
+/* =========== تأثير وصوت الضغط =========== */
+let audioCtx = null;
+const SOUNDS = [["drop","💧 قطرة ماء"],["wood","🪵 نقرة خشب"],["bell","🔔 جرس ناعم"],["bubble","🫧 فقاعة"]];
+function tone(type, f1, f2, vol, dur, delay){
+  const t = audioCtx.currentTime + (delay || 0);
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.setValueAtTime(f1, t);
+  if(f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur * .5);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g).connect(audioCtx.destination); o.start(t); o.stop(t + dur + .02);
+}
+function noiseTap(freq, vol, dur){
+  const t = audioCtx.currentTime, len = Math.floor(audioCtx.sampleRate * dur);
+  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate), d = buf.getChannelData(0);
+  for(let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+  const src = audioCtx.createBufferSource(), bp = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+  src.buffer = buf; bp.type = "bandpass"; bp.frequency.value = freq; bp.Q.value = 5;
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  src.connect(bp).connect(g).connect(audioCtx.destination); src.start(t);
+}
+function tapSound(force){
+  if(data.sound === false && !force) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === "suspended") audioCtx.resume();
+    const k = force || data.soundType || "drop";
+    if(k === "drop"){ tone("sine", 600, 1500, .12, .12); }
+    if(k === "wood"){ noiseTap(1600, .35, .05); tone("triangle", 820, 0, .08, .07); }
+    if(k === "bell"){ tone("sine", 1318, 0, .05, .6); tone("sine", 1976, 0, .02, .4); }
+    if(k === "bubble"){ tone("sine", 280, 900, .1, .1); tone("sine", 420, 1200, .05, .08, .06); }
+  }catch(e){}
+}
+const TAP_SEL = "button, a, .card-img, .bg-list img, .switch-row, select, input[type=checkbox], input[type=file], input[type=color]";
+document.addEventListener("pointerdown", e => {
+  if(document.body.classList.contains("editing") && e.target.closest("[data-k]")) return;
+  const el = e.target.closest(TAP_SEL); if(!el) return;
+  tapSound();
+  const r = document.createElement("span");
+  r.className = "tap-ring"; r.style.left = e.clientX + "px"; r.style.top = e.clientY + "px";
+  document.body.appendChild(r); setTimeout(() => r.remove(), 600);
+  if(el.matches("button, .btn")){ el.classList.add("pressed"); setTimeout(() => el.classList.remove("pressed"), 130); }
+});
+
+/* =========== التشغيل =========== */
+function renderAll(){ renderCards(); renderStats(); }
+
+window.addEventListener("scroll", () => $("header").classList.toggle("scrolled", scrollY > 50));
+const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } }), {threshold:.15});
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+applySettings();
+applyTexts();
+applyDesign();
+renderAll();
+</script>
+</body>
+</html>
