@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#4f46e5">
+<title>مكتبي</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="logo">💼</div>
+    <div><h1>مكتبي</h1><p id="today"></p></div>
+  </div>
+  <h2><span id="hello">مرحباً 👋</span>ماذا تريد أن تنجز اليوم؟</h2>
+</div>
+
+<div class="home">
+  <a class="card c-docs" href="docs.html">
+    <div class="icon">📝</div>
+    <div class="txt"><b>مستندات</b><small>سيرة ذاتية، عروض أسعار، خطابات</small></div>
+    <span class="badge" id="nDocs"></span><span class="arrow">‹</span>
+  </a>
+
+  <a class="card c-sheets" href="sheets.html">
+    <div class="icon">📊</div>
+    <div class="txt"><b>جداول</b><small>حسابات، فواتير، رواتب</small></div>
+    <span class="badge" id="nSheets"></span><span class="arrow">‹</span>
+  </a>
+
+  <a class="card c-slides" href="slides.html">
+    <div class="icon">🎞</div>
+    <div class="txt"><b>عروض</b><small>شرائح تقديمية مثل PowerPoint</small></div>
+    <span class="badge" id="nDecks"></span><span class="arrow">‹</span>
+  </a>
+
+  <p class="foot">🔒 كل ملفاتك محفوظة على جهازك تلقائياً</p>
+</div>
+
+<script src="common.js"></script>
+<script>
+// التاريخ والتحية حسب الوقت
+var now = new Date(), h = now.getHours();
+$('#hello').textContent = h < 12 ? 'صباح الخير ☀️' : h < 18 ? 'مساء الخير 🌤' : 'مساء الخير 🌙';
+try { $('#today').textContent = now.toLocaleDateString('ar', { weekday:'long', day:'numeric', month:'long' }); } catch(e){}
+
+// عدد الملفات في كل قسم
+function badge(id, n, word){
+  var el = $(id);
+  if(n > 0) el.textContent = n + ' ' + word; else el.style.display = 'none';
+}
+badge('#nDocs', loadData('office-docs', []).length, 'مستند');
+badge('#nDecks', loadData('office-slides', []).length, 'عرض');
+var nT = loadData('office-sheets', []).length;
+if(!nT && loadData('jadawili-v2', null)) nT = 1;
+badge('#nSheets', nT, 'جدول');
+</script>
+</body>
+</html>

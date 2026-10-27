@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#2563eb">
+<title>مستندات</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="docs">
+
+<header><a href="index.html" class="back" id="back">→</a><span>📝 مستندات</span></header>
+
+<!-- قائمة المستندات -->
+<div class="list" id="listView">
+  <button class="new-btn" id="newDoc">➕ مستند جديد</button>
+  <div id="items"></div>
+</div>
+
+<!-- محرر المستند -->
+<div id="editView" class="hidden editor">
+  <input class="title-input" id="docTitle" placeholder="عنوان المستند">
+
+  <!-- التبويبات -->
+  <div class="tabs" id="tabs">
+    <button data-tab="home" class="on">الرئيسية</button>
+    <button data-tab="insert">إدراج</button>
+    <button data-tab="file">ملف</button>
+  </div>
+
+  <!-- تبويب الرئيسية -->
+  <div class="tools panel" data-panel="home">
+    <button data-cmd="undo">↶</button>
+    <button data-cmd="redo">↷</button>
+    <span class="sep"></span>
+    <button data-cmd="bold"><b>ع</b></button>
+    <button data-cmd="italic"><i>م</i></button>
+    <button data-cmd="underline"><u>خ</u></button>
+    <label>🎨<input type="color" id="textColor" value="#dc2626"></label>
+    <select id="fontSize">
+      <option value="">الحجم</option>
+      <option value="2">صغير</option>
+      <option value="3">عادي</option>
+      <option value="5">كبير</option>
+      <option value="6">ضخم</option>
+    </select>
+    <span class="sep"></span>
+    <button data-block="h2">عنوان</button>
+    <button data-block="p">نص عادي</button>
+    <button data-cmd="insertUnorderedList">• قائمة</button>
+    <button data-cmd="insertOrderedList">1. قائمة</button>
+    <span class="sep"></span>
+    <button data-cmd="justifyRight">⇥</button>
+    <button data-cmd="justifyCenter">↔</button>
+    <button data-cmd="justifyLeft">⇤</button>
+  </div>
+
+  <!-- تبويب إدراج -->
+  <div class="tools panel hidden" data-panel="insert">
+    <button id="insImage">📷 صورة</button>
+    <button id="insTable">▦ جدول</button>
+    <button id="insLine">― خط فاصل</button>
+    <button id="insDate">📅 التاريخ</button>
+  </div>
+
+  <!-- تبويب ملف -->
+  <div class="tools panel hidden" data-panel="file">
+    <button id="exportDoc">⬇ تصدير Word</button>
+    <button id="dupDoc">⧉ نسخة من المستند</button>
+    <button id="delDoc" class="danger">🗑 حذف المستند</button>
+  </div>
+
+  <!-- أدوات تظهر عند الوقوف داخل جدول -->
+  <div class="tools ctx hidden" id="tableBar">
+    <span class="lbl">الجدول:</span>
+    <button data-t="addRow">+ صف</button>
+    <button data-t="addCol">+ عمود</button>
+    <button data-t="delRow">− صف</button>
+    <button data-t="delCol">− عمود</button>
+    <button data-t="delTable" class="danger">🗑 حذف الجدول</button>
+  </div>
+
+  <!-- أدوات تظهر عند لمس صورة -->
+  <div class="tools ctx hidden" id="imgBar">
+    <span class="lbl">الصورة:</span>
+    <button data-s="25">صغيرة</button>
+    <button data-s="50">متوسطة</button>
+    <button data-s="75">كبيرة</button>
+    <button data-s="100">كاملة</button>
+    <span class="sep"></span>
+    <button data-a="right">⇥</button>
+    <button data-a="center">↔</button>
+    <button data-a="left">⇤</button>
+    <span class="sep"></span>
+    <button id="imgReplace">🔄 تغيير</button>
+    <button id="imgDelete" class="danger">🗑 حذف</button>
+  </div>
+
+  <div class="paper-wrap"><div id="paper" contenteditable="true"></div></div>
+  <div class="status" id="status">0 كلمة</div>
+</div>
+
+<input type="file" id="imgFile" accept="image/*" style="display:none">
+
+<script src="common.js"></script>
+<script src="templates.js"></script>
+<script src="docs.js"></script>
+</body>
+</html>

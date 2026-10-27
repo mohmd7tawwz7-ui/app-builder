@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#16a34a">
+<title>جداول</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="sheets">
+
+<header><a href="index.html" class="back" id="back">→</a><span>📊 جداول</span></header>
+
+<!-- قائمة الجداول -->
+<div class="list" id="listView">
+  <button class="new-btn" id="newSheet">➕ جدول جديد</button>
+  <div id="items"></div>
+</div>
+
+<!-- محرر الجدول -->
+<div id="editView" class="hidden editor">
+  <input class="title-input" id="sheetTitle" placeholder="اسم الجدول">
+
+  <div class="tools">
+    <button id="bSum">∑ جمع تلقائي</button>
+    <button id="bUndo">↶ تراجع</button>
+    <button id="bBold"><b>ع</b> عريض</button>
+    <label>🎨 لون<input type="color" id="bColor" value="#fff59d"></label>
+    <button id="bClear">🗑 مسح الخلية</button>
+    <button id="bRow">➕ صفوف</button>
+    <button id="bCol">➕ عمود</button>
+    <button id="bExport">⬇ تصدير</button>
+  </div>
+
+  <div class="bar">
+    <div id="cellName">أ1</div>
+    <input id="input" autocomplete="off" spellcheck="false" placeholder="اكتب رقم أو نص أو معادلة">
+    <button id="ok">✓</button>
+  </div>
+
+  <div class="quick">
+    <span>معادلات:</span>
+    <button>جمع</button>
+    <button>متوسط</button>
+    <button>اكبر</button>
+    <button>اصغر</button>
+    <button>عدد</button>
+  </div>
+
+  <div id="grid"></div>
+</div>
+
+<script src="common.js"></script>
+<script src="templates.js"></script>
+<script src="sheets.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>عروض</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="slides">
+
+<header><a href="index.html" class="back" id="back">→</a><span>🎞 عروض</span></header>
+
+<!-- قائمة العروض -->
+<div class="list" id="listView">
+  <button class="new-btn" id="newDeck">➕ عرض جديد</button>
+  <div id="items"></div>
+</div>
+
+<!-- محرر العرض -->
+<div id="editView" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:0">
+  <input class="title-input" id="deckTitle" placeholder="اسم العرض">
+  <div class="tools">
+    <button id="play">▶ تشغيل العرض</button>
+    <button id="addSlide">➕ شريحة</button>
+    <button id="dupSlide">⧉ تكرار</button>
+    <button id="moveUp">→ تقديم</button>
+    <button id="moveDown">← تأخير</button>
+    <button id="delSlide">🗑 حذف</button>
+  </div>
+  <div class="stage">
+    <div class="slide" id="slide">
+      <input id="sTitle" placeholder="العنوان">
+      <textarea id="sBody" placeholder="اكتب النص هنا..."></textarea>
+    </div>
+    <div class="colors" id="colors"></div>
+  </div>
+  <div class="thumbs" id="thumbs"></div>
+</div>
+
+<!-- وضع التشغيل -->
+<div class="show hidden" id="show"><div class="slide" id="showSlide"></div></div>
+<div class="show-nav hidden" id="showNav">
+  <button id="prev">→ السابق</button>
+  <button id="count">1/1</button>
+  <button id="next">التالي ←</button>
+  <button id="exit">✕ خروج</button>
+</div>
+
+<script src="common.js"></script>
+<script src="slides.js"></script>
+</body>
+</html>
