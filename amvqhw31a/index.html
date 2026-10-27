@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أتقن | متجر المنتجات الرقمية</title>
+  <meta name="description" content="أتقن - متجر منتجات رقمية: تطبيقات وأدوات وقوالب جاهزة بأسعار مناسبة">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- الشريط العلوي -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <span class="logo-mark">أ</span>
+        <span class="logo-text">أتقن</span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#home">الرئيسية</a>
+        <a href="#products">المنتجات</a>
+        <a href="#how">طريقة الشراء</a>
+        <a href="#faq">الأسئلة</a>
+        <a href="#contact">تواصل</a>
+      </nav>
+      <div class="header-actions">
+        <button class="cart-btn" id="cartBtn" aria-label="السلة">
+          🛒 <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="menu-btn" id="menuBtn" aria-label="القائمة">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- الواجهة -->
+  <section class="hero" id="home">
+    <div class="container hero-inner">
+      <span class="badge">✨ منتجات رقمية جاهزة</span>
+      <h1>اشترِ الأداة… <span class="accent">وأتقن</span> عملك</h1>
+      <p>تطبيقات وأدوات رقمية تعمل من جوالك، تصلك مباشرة على واتساب بعد الدفع.</p>
+      <div class="hero-buttons">
+        <a href="#products" class="btn btn-primary">تصفّح المنتجات</a>
+        <a href="#how" class="btn btn-ghost">كيف أشتري؟</a>
+      </div>
+      <div class="stats">
+        <div><strong>⚡</strong><span>تسليم سريع</span></div>
+        <div><strong>🔒</strong><span>دفع آمن</span></div>
+        <div><strong>💬</strong><span>دعم واتساب</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- المنتجات -->
+  <section class="section" id="products">
+    <div class="container">
+      <div class="section-head">
+        <h2>المنتجات</h2>
+        <p>اختر المنتج المناسب لك</p>
+      </div>
+      <div class="toolbar">
+        <input type="search" id="searchInput" placeholder="ابحث عن منتج...">
+        <div class="filters" id="filters"></div>
+      </div>
+      <div class="grid" id="productsGrid"></div>
+      <p class="empty" id="emptyMsg" hidden>لا توجد منتجات مطابقة.</p>
+    </div>
+  </section>
+
+  <!-- طريقة الشراء -->
+  <section class="section alt" id="how">
+    <div class="container">
+      <div class="section-head">
+        <h2>طريقة الشراء</h2>
+        <p>٤ خطوات بسيطة</p>
+      </div>
+      <div class="steps">
+        <div class="step"><span>1</span><h3>اختر المنتج</h3><p>أضف ما تريد إلى السلة.</p></div>
+        <div class="step"><span>2</span><h3>أرسل الطلب</h3><p>اضغط «إتمام الطلب» فيُفتح واتساب برسالة جاهزة.</p></div>
+        <div class="step"><span>3</span><h3>ادفع</h3><p>عبر PayPal أو urpay وأرسل صورة الإيصال.</p></div>
+        <div class="step"><span>4</span><h3>استلم منتجك</h3><p>نرسل لك المنتج على واتساب مباشرة.</p></div>
+      </div>
+      <div class="pay-box">
+        <h3>طرق الدفع المتاحة</h3>
+        <div class="pay-methods" id="payMethods"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- الأسئلة الشائعة -->
+  <section class="section" id="faq">
+    <div class="container narrow">
+      <div class="section-head">
+        <h2>الأسئلة الشائعة</h2>
+      </div>
+      <div class="faq" id="faqList"></div>
+    </div>
+  </section>
+
+  <!-- تواصل -->
+  <section class="section alt" id="contact">
+    <div class="container narrow center">
+      <h2>عندك سؤال؟</h2>
+      <p>تواصل معنا مباشرة وسنرد عليك بأسرع وقت.</p>
+      <a class="btn btn-whatsapp" id="contactWhatsapp" target="_blank" rel="noopener">💬 راسلنا على واتساب</a>
+      <div class="socials" id="socials"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> أتقن — جميع الحقوق محفوظة</p>
+    </div>
+  </footer>
+
+  <!-- نافذة تفاصيل المنتج -->
+  <div class="modal" id="productModal" hidden>
+    <div class="modal-box">
+      <button class="close" data-close>✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- السلة الجانبية -->
+  <div class="overlay" id="overlay" hidden></div>
+  <aside class="cart" id="cart" aria-hidden="true">
+    <div class="cart-head">
+      <h3>🛒 سلتك</h3>
+      <button class="close" id="closeCart">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="total">الإجمالي: <strong id="cartTotal">0</strong></div>
+      <input type="text" id="customerName" placeholder="اسمك (اختياري)">
+      <button class="btn btn-whatsapp full" id="checkoutBtn">إتمام الطلب عبر واتساب</button>
+      <button class="link-btn" id="clearCart">تفريغ السلة</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
