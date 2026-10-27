@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>محوّل المشاريع</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Tahoma,sans-serif;background:#0f172a;color:#e2e8f0}
+header{padding:14px 16px;background:#1e293b;font-size:20px;font-weight:bold}
+main{padding:16px;max-width:700px;margin:auto}
+.card{background:#1e293b;border-radius:12px;padding:14px;margin-bottom:14px}
+summary{font-weight:bold;cursor:pointer}
+label{display:block;margin:14px 0 6px;font-size:14px;color:#94a3b8}
+input[type=text],input[type=password],input:not([type]){width:100%;padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:16px;font-family:inherit}
+button{padding:11px 14px;border:none;border-radius:8px;background:#6366f1;color:#fff;font-size:15px;font-weight:bold;margin-top:8px}
+button.sec{background:#334155}
+button.green{background:#16a34a;width:100%;font-size:17px;padding:14px;margin-top:18px}
+button:disabled{opacity:.5}
+.status{margin-top:10px;font-size:14px;color:#fbbf24;min-height:20px;line-height:1.6}
+.hidden{display:none}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top button{margin-top:0}
+.check{display:flex;align-items:center;gap:10px;font-size:16px;color:#e2e8f0;margin:10px 0}
+.check input{width:22px;height:22px}
+.iconRow{display:flex;gap:12px;align-items:center}
+.iconRow img{width:84px;height:84px;border-radius:20px;background:#0f172a;object-fit:cover;flex-shrink:0}
+.appItem{display:flex;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #334155}
+.appItem img{width:48px;height:48px;border-radius:12px;object-fit:cover;background:#0f172a;flex-shrink:0}
+.appItem .info{flex:1;min-width:0}
+.appItem .name{font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appItem .date{font-size:12px;color:#94a3b8}
+.appItem button{margin-top:0;padding:8px 10px;font-size:13px}
+.dl{display:block;text-align:center;margin-top:10px;padding:13px 16px;background:#16a34a;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold}
+.dl.web{background:#2563eb}
+.hint{font-size:13px;color:#94a3b8;margin-top:6px;line-height:1.6}
+</style>
+</head>
+<body>
+<header>📦 محوّل المشاريع</header>
+<main>
+  <details class="card" id="settings">
+    <summary>⚙️ الإعدادات</summary>
+    <label>مفتاح GitHub (Token)</label>
+    <input id="ghToken" type="password" placeholder="github_pat_...">
+    <label>اسم مستخدم GitHub</label>
+    <input id="ghUser" value="mohmd7tawwz7-ui">
+    <label>اسم المستودع</label>
+    <input id="ghRepo" value="app-builder">
+    <button onclick="saveSettings()">💾 حفظ</button>
+    <div class="status" id="setStatus"></div>
+  </details>
+
+  <details class="card" id="library">
+    <summary>📚 مشاريعي (<span id="libCount">0</span>)</summary>
+    <div id="libList"></div>
+  </details>
+
+  <div class="card">
+    <div class="top">
+      <b id="projTitle">مشروع جديد</b>
+      <button class="sec" onclick="newProject()">🆕 جديد</button>
+    </div>
+
+    <label>١. ملف المشروع (ZIP)</label>
+    <button class="sec" onclick="$('zipFile').click()">📁 اختر ملف ZIP</button>
+    <input type="file" id="zipFile" accept=".zip,application/zip" class="hidden" onchange="pickZip(this)">
+    <div class="status" id="zipInfo">لازم يكون داخله ملف index.html</div>
+
+    <label>٢. اسم التطبيق</label>
+    <input id="appName" oninput="nameChanged()" placeholder="مثال: ضريح الرماد">
+
+    <label>٣. الأيقونة</label>
+    <div class="iconRow">
+      <img id="iconImg" alt="">
+      <div>
+        <button class="sec" onclick="$('iconFile').click()">🖼️ اختر صورة</button>
+        <div class="status" style="margin-top:6px">أو اتركها وتنعمل تلقائياً</div>
+      </div>
+      <input type="file" id="iconFile" accept="image/*" class="hidden" onchange="pickIcon(this)">
+    </div>
+
+    <label>٤. حوّله إلى</label>
+    <label class="check"><input type="checkbox" id="chkApk" checked> 📱 تطبيق أندرويد (APK)</label>
+    <label class="check"><input type="checkbox" id="chkWeb" checked> 🌐 موقع ويب</label>
+
+    <button class="green" id="goBtn" onclick="convert()">🚀 حوّل</button>
+    <div class="status" id="status"></div>
+    <div id="results"></div>
+  </div>
+</main>
+
+<script>
+const SETTINGS = ["ghToken", "ghUser", "ghRepo"];
+let projects = [];
+let cur = null;
+let zipFile = null;
+
+function $(id){ return document.getElementById(id); }
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+function setStatus(t){ $("status").textContent = t; }
+function newId(){ return "a" + Date.now().toString(36); }
+function blankProject(){
+  const id = newId();
+  return { id: id, appId: "com.mohmd." + id, name: "", icon: "", iconAuto: true, apk: "", site: "", updated: 0 };
+}
+
+// ===== الإعدادات =====
+function loadSettings(){
+  try {
+    SETTINGS.forEach(id => {
+      const v = localStorage.getItem("set_" + id);
+      if (v) $(id).value = v;
+    });
+  } catch(e) {}
+  if (!$("ghToken").value) $("settings").open = true;
+}
+
+function saveSettings(){
+  try { SETTINGS.forEach(id => localStorage.setItem("set_" + id, $(id).value.trim())); } catch(e) {}
+  $("setStatus").textContent = "✅ تم الحفظ";
+}
+
+// ===== المشاريع =====
+function loadProjects(){
+  try { projects = JSON.parse(localStorage.getItem("projects_v1") || "[]"); } catch(e) { projects = []; }
+  let last = null;
+  try { last = localStorage.getItem("last_project"); } catch(e) {}
+  const p = projects.find(x => x.id === last);
+  cur = p ? JSON.parse(JSON.stringify(p)) : blankProject();
+  showProject();
+  renderLibrary();
+}
+
+function saveProjects(){
+  try { localStorage.setItem("projects_v1", JSON.stringify(projects)); }
+  catch(e) { setStatus("⚠️ الذاكرة امتلأت، احذف مشاريع قديمة"); }
+}
+
+function saveCurrent(){
+  cur.updated = Date.now();
+  const copy = JSON.parse(JSON.stringify(cur));
+  const i = projects.findIndex(p => p.id === cur.id);
+  if (i >= 0) projects[i] = copy; else projects.unshift(copy);
+  projects.sort((a, b) => b.updated - a.updated);
+  saveProjects();
+  try { localStorage.setItem("last_project", cur.id); } catch(e) {}
+  renderLibrary();
+}
+
+function makeBtn(text, cls, fn){
+  const b = document.createElement("button");
+  b.textContent = text; b.className = cls; b.onclick = fn;
+  return b;
+}
+
+function renderLibrary(){
+  const box = $("libList");
+  box.innerHTML = "";
+  $("libCount").textContent = projects.length;
+  if (!projects.length) { box.textContent = "ما عندك مشاريع محوّلة لسا"; return; }
+  projects.forEach(p => {
+    const row = document.createElement("div"); row.className = "appItem";
+    const img = document.createElement("img"); if (p.icon) img.src = p.icon;
+    const info = document.createElement("div"); info.className = "info";
+    const n = document.createElement("div"); n.className = "name"; n.textContent = p.name || "بدون اسم";
+    const d = document.createElement("div"); d.className = "date";
+    d.textContent = new Date(p.updated).toLocaleDateString("ar");
+    info.append(n, d);
+    row.append(img, info, makeBtn("فتح", "sec", () => openProject(p.id)));
+    if (p.apk) row.append(makeBtn("📱", "sec", () => window.open(p.apk, "_blank")));
+    if (p.site) row.append(makeBtn("🌐", "sec", () => window.open(p.site, "_blank")));
+    row.append(makeBtn("🗑️", "sec", () => deleteProject(p.id)));
+    box.append(row);
+  });
+}
+
+function openProject(id){
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  cur = JSON.parse(JSON.stringify(p));
+  zipFile = null;
+  try { localStorage.setItem("last_project", cur.id); } catch(e) {}
+  showProject();
+  $("library").open = false;
+  setStatus("📂 لتحديثه: اختر ملف ZIP الجديد واضغط حوّل");
+}
+
+function deleteProject(id){
+  if (!confirm("تحذف هذا المشروع من القائمة؟")) return;
+  projects = projects.filter(p => p.id !== id);
+  saveProjects();
+  if (cur && cur.id === id) newProject();
+  renderLibrary();
+}
+
+function newProject(){
+  cur = blankProject();
+  zipFile = null;
+  try { localStorage.removeItem("last_project"); } catch(e) {}
+  showProject();
+  setStatus("");
+}
+
+function showProject(){
+  $("projTitle").textContent = cur.updated ? (cur.name || "مشروع") : "مشروع جديد";
+  $("appName").value = cur.name || "";
+  if (cur.icon) $("iconImg").src = cur.icon; else $("iconImg").removeAttribute("src");
+  $("zipInfo").textContent = zipFile ? "✅ " + zipFile.name : "لازم يكون داخله ملف index.html";
+  showResults();
+}
+
+function showResults(){
+  const box = $("results");
+  box.innerHTML = "";
+  if (cur.apk) {
+    const a = document.createElement("a");
+    a.className = "dl"; a.href = cur.apk; a.target = "_blank";
+    a.textContent = "📱 حمّل التطبيق (ZIP)";
+    box.append(a);
+    const h = document.createElement("div"); h.className = "hint";
+    h.textContent = "بعد التحميل: افتح تطبيق الملفات ← التنزيلات ← فك الضغط ← اضغط ملف APK وثبّته";
+    box.append(h);
+  }
+  if (cur.site) {
+    const a = document.createElement("a");
+    a.className = "dl web"; a.href = cur.site; a.target = "_blank"; a.textContent = "🌐 افتح الموقع";
+    box.append(a);
+  }
+}
+
+function nameChanged(){
+  cur.name = $("appName").value;
+  if (cur.iconAuto) {
+    cur.icon = cur.name.trim() ? letterIcon(cur.name) : "";
+    if (cur.icon) $("iconImg").src = cur.icon; else $("iconImg").removeAttribute("src");
+  }
+  if (cur.updated) saveCurrent();
+}
+
+// ===== الملفات =====
+function pickZip(input){
+  const f = input.files && input.files[0];
+  input.value = "";
+  if (!f) return;
+  if (!/\.zip$/i.test(f.name)) { $("zipInfo").textContent = "⚠️ لازم يكون ملف .zip"; return; }
+  zipFile = f;
+  $("zipInfo").textContent = "✅ " + f.name + " (" + (f.size / 1048576).toFixed(1) + " MB)";
+  if (!cur.name) {
+    cur.name = f.name.replace(/\.zip$/i, "");
+    $("appName").value = cur.name;
+    nameChanged();
+  }
+}
+
+function letterIcon(name){
+  const c = document.createElement("canvas"); c.width = c.height = 512;
+  const x = c.getContext("2d");
+  let h = 0;
+  for (const ch of (name || "A")) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const hue = h % 360;
+  const g = x.createLinearGradient(0, 0, 512, 512);
+  g.addColorStop(0, "hsl(" + hue + ",70%,55%)");
+  g.addColorStop(1, "hsl(" + ((hue + 40) % 360) + ",70%,38%)");
+  x.fillStyle = g; x.fillRect(0, 0, 512, 512);
+  x.fillStyle = "#fff";
+  x.font = "bold 260px system-ui,Tahoma,sans-serif";
+  x.textAlign = "center"; x.textBaseline = "middle";
+  x.fillText(Array.from((name || "A").trim())[0] || "A", 256, 280);
+  return c.toDataURL("image/png");
+}
+
+function pickIcon(input){
+  const file = input.files && input.files[0];
+  input.value = "";
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas"); c.width = c.height = 512;
+      const x = c.getContext("2d");
+      const s = Math.min(img.width, img.height);
+      x.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 512, 512);
+      cur.icon = c.toDataURL("image/png");
+      cur.iconAuto = false;
+      $("iconImg").src = cur.icon;
+      if (cur.updated) saveCurrent();
+    };
+    img.onerror = () => setStatus("❌ الصورة ما تنفتح");
+    img.src = r.result;
+  };
+  r.readAsDataURL(file);
+}
+
+function fileToBase64(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result).split(",")[1]);
+    r.onerror = () => rej(new Error("ما قدرت أقرأ الملف"));
+    r.readAsDataURL(file);
+  });
+}
+
+// ===== GitHub =====
+async function gh(path, opts){
+  opts = opts || {};
+  const headers = {
+    "Authorization": "Bearer " + $("ghToken").value.trim(),
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28"
+  };
+  if (opts.body) headers["Content-Type"] = "application/json";
+  const url = "https://api.github.com/repos/" + $("ghUser").value.trim() + "/" +
+    $("ghRepo").value.trim() + path;
+  const r = await fetch(url, { method: opts.method || "GET", headers: headers, body: opts.body });
+  let data = null;
+  try { data = await r.json(); } catch(e) {}
+  return { ok: r.ok, status: r.status, data: data };
+}
+
+function ghErr(r){
+  if (r.status === 401) return "مفتاح GitHub غلط أو منتهي";
+  if (r.status === 403) return "مفتاح GitHub ما عنده صلاحية كافية (Contents و Actions)";
+  if (r.status === 404) return "ما لقيت المستودع أو ملف البناء، تأكد من الإعدادات";
+  if (r.status === 422) return "GitHub رفض الطلب، تأكد إنك حدّثت ملف build.yml";
+  return (r.data && r.data.message) || ("خطأ " + r.status);
+}
+
+async function getSha(path){
+  const parts = path.split("/");
+  const name = parts.pop();
+  const r = await gh("/contents/" + parts.join("/"));
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(ghErr(r));
+  const f = Array.isArray(r.data) && r.data.find(x => x.name === name);
+  return f ? f.sha : null;
+}
+
+async function putFile(path, b64, msg){
+  const sha = await getSha(path);
+  const body = { message: msg, content: b64 };
+  if (sha) body.sha = sha;
+  const r = await gh("/contents/" + path, { method: "PUT", body: JSON.stringify(body) });
+  if (!r.ok) throw new Error(ghErr(r));
+}
+
+async function latestRun(){
+  const r = await gh("/actions/workflows/build.yml/runs?per_page=1");
+  return (r.ok && r.data && r.data.workflow_runs && r.data.workflow_runs[0]) || null;
+}
+
+async function waitForRun(prevId){
+  const start = Date.now();
+  while (Date.now() - start < 15 * 60 * 1000) {
+    await sleep(8000);
+    const run = await latestRun();
+    const s = Math.floor((Date.now() - start) / 1000);
+    const time = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    if (run && run.id !== prevId) {
+      setStatus("⏳ (٤/٤) جاري التحويل... " + time);
+      if (run.status === "completed") return run;
+    } else {
+      setStatus("⏳ (٤/٤) ننتظر GitHub يبدأ... " + time);
+    }
+  }
+  throw new Error("طوّل أكثر من اللازم، شيك على صفحة Actions");
+}
+
+// ===== التحويل =====
+async function convert(){
+  const doApk = $("chkApk").checked, doWeb = $("chkWeb").checked;
+  if (!doApk && !doWeb) { setStatus("⚠️ اختر APK أو موقع أو الاثنين"); return; }
+  if (!zipFile) { setStatus("⚠️ اختر ملف ZIP أول"); return; }
+  if (!$("ghToken").value.trim()) { setStatus("⚠️ حط مفتاح GitHub في الإعدادات"); $("settings").open = true; return; }
+  if (zipFile.size > 25 * 1048576) { setStatus("⚠️ الملف أكبر من 25MB، صغّر الصور أو الأصوات"); return; }
+
+  const name = (cur.name || "").replace(/["`$\\]/g, "").trim() || "MyApp";
+  cur.name = name;
+  if (!cur.icon) { cur.icon = letterIcon(name); cur.iconAuto = true; $("iconImg").src = cur.icon; }
+  const mode = doApk && doWeb ? "both" : (doApk ? "apk" : "web");
+  const tag = "b" + Date.now().toString(36);
+  const user = $("ghUser").value.trim(), repo = $("ghRepo").value.trim();
+
+  $("goBtn").disabled = true;
+  $("results").innerHTML = "";
+  try {
+    setStatus("⏳ (١/٤) جاري قراءة الملف...");
+    const b64 = await fileToBase64(zipFile);
+
+    setStatus("⏳ (٢/٤) جاري رفع المشروع... (حسب حجم الملف)");
+    await putFile("upload/app.zip", b64, "Upload project: " + name);
+    await putFile("app/icon.png", cur.icon.split(",")[1], "Update icon: " + name);
+
+    const before = await latestRun();
+    const prevId = before ? before.id : 0;
+
+    setStatus("⏳ (٣/٤) جاري تشغيل التحويل...");
+    const disp = await gh("/actions/workflows/build.yml/dispatches", {
+      method: "POST",
+      body: JSON.stringify({ ref: "main", inputs: { app_name: name, app_id: cur.appId, tag: tag, mode: mode, slug: cur.id } })
+    });
+    if (!disp.ok) throw new Error(ghErr(disp));
+
+    const run = await waitForRun(prevId);
+    if (run.conclusion === "success") {
+      if (doApk) cur.apk = "https://github.com/" + user + "/" + repo + "/releases/download/" + tag + "/" + tag + ".zip";
+      if (doWeb) cur.site = "https://" + user.toLowerCase() + ".github.io/" + repo + "/" + cur.id + "/";
+      saveCurrent();
+      showProject();
+      setStatus("✅ تم!" + (doWeb ? " (الموقع ممكن ياخذ دقيقة أو دقيقتين لين يتحدّث)" : ""));
+    } else {
+      setStatus("❌ فشل التحويل. افتح صفحة Actions في GitHub وصوّر لي الخطأ");
+    }
+  } catch(e) {
+    setStatus("❌ " + e.message);
+  } finally {
+    $("goBtn").disabled = false;
+  }
+}
+
+loadSettings();
+loadProjects();
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+"name": "Build APK",
+"on": {
+"workflow_dispatch": {"inputs": {
+"app_name": {"description": "App name", "required": true, "default": "MyApp"},
+"app_id": {"description": "Package id", "required": true, "default": "com.mohmd.myapp"},
+"tag": {"description": "Release tag", "required": true, "default": "manual"},
+"mode": {"description": "apk, web or both", "required": true, "default": "both"},
+"slug": {"description": "Website folder", "required": true, "default": "myapp"}
+}}
+},
+"permissions": {"contents": "write"},
+"jobs": {
+"build": {
+"runs-on": "ubuntu-latest",
+"env": {"APP_NAME": "${{ inputs.app_name }}", "APP_ID": "${{ inputs.app_id }}", "TAG": "${{ inputs.tag }}", "SLUG": "${{ inputs.slug }}", "GH_TOKEN": "${{ github.token }}"},
+"steps": [
+{"uses": "actions/checkout@v4"},
+{"name": "Unzip project", "run": "if [ -f upload/app.zip ]; then rm -rf www && mkdir -p www && unzip -q -o upload/app.zip -d www; fi; IDX=$(find www -name index.html | awk '{print length($0), $0}' | sort -n | head -1 | cut -d' ' -f2-); if [ -z \"$IDX\" ]; then echo 'No index.html found in zip'; exit 1; fi; D=$(dirname \"$IDX\"); if [ \"$D\" != \"www\" ]; then mv \"$D\" /tmp/site && rm -rf www && mv /tmp/site www; fi; ls -la www"},
+{"name": "Publish website", "if": "inputs.mode != 'apk'", "run": "rm -rf /tmp/pages && mkdir /tmp/pages && cd /tmp/pages && git init -q && git remote add origin \"https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git\" && if git fetch -q --depth 1 origin gh-pages; then git checkout -q -b gh-pages FETCH_HEAD; else git checkout -q --orphan gh-pages; fi && rm -rf \"$SLUG\" && mkdir -p \"$SLUG\" && cp -r \"$GITHUB_WORKSPACE/www/.\" \"$SLUG/\" && touch .nojekyll && git add -A && git -c user.name=app-builder -c user.email=app-builder@users.noreply.github.com commit -qm \"Site $SLUG\" && git push -q origin gh-pages"},
+{"uses": "actions/setup-java@v4", "if": "inputs.mode != 'web'", "with": {"distribution": "temurin", "java-version": "21"}},
+{"uses": "actions/setup-node@v4", "if": "inputs.mode != 'web'", "with": {"node-version": "22"}},
+{"name": "Signing key", "if": "inputs.mode != 'web'", "run": "mkdir -p ~/.android && if [ -f app/debug.keystore ]; then cp app/debug.keystore ~/.android/debug.keystore; else keytool -genkeypair -keystore ~/.android/debug.keystore -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=Android Debug,O=Android,C=US' && mkdir -p app && cp ~/.android/debug.keystore app/debug.keystore && git config user.name app-builder && git config user.email app-builder@users.noreply.github.com && git add app/debug.keystore && git commit -m 'Add signing key' && git push origin HEAD:main; fi"},
+{"name": "Create Android project", "if": "inputs.mode != 'web'", "run": "npm init -y && npm install @capacitor/core @capacitor/cli @capacitor/android && npx cap init \"$APP_NAME\" \"$APP_ID\" --web-dir=www && npx cap add android && npx cap sync android"},
+{"name": "Set icon", "if": "inputs.mode != 'web'", "run": "if [ -f app/icon.png ]; then rm -rf android/app/src/main/res/mipmap-anydpi*; for d in android/app/src/main/res/mipmap-*; do cp app/icon.png $d/ic_launcher.png; cp app/icon.png $d/ic_launcher_round.png; done; fi"},
+{"name": "Build APK", "if": "inputs.mode != 'web'", "run": "cd android && chmod +x gradlew && ./gradlew assembleDebug"},
+{"name": "Publish APK", "if": "inputs.mode != 'web'", "run": "cp android/app/build/outputs/apk/debug/app-debug.apk \"$TAG.apk\" && zip -j \"$TAG.zip\" \"$TAG.apk\" && gh release create \"$TAG\" \"$TAG.zip\" \"$TAG.apk\" --title \"$APP_NAME\" --notes \"$APP_ID\""}
+]
+}
+}
+}
