@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#07090d">
+  <title>لوحة المالك</title>
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <script>
+    try {
+      var t = JSON.parse(localStorage.getItem("atqen_theme"));
+      document.documentElement.dataset.bg = (t && t.background) || "royal";
+      if (t) for (var k in t.vars) document.documentElement.style.setProperty(k, t.vars[k]);
+    } catch (e) { document.documentElement.dataset.bg = "royal"; }
+  </script>
+</head>
+<body class="admin">
+
+  <!-- الخلفية -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-layer royal"></div>
+    <div class="bg-layer layer-orbs">
+      <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+    </div>
+    <div class="bg-layer grid-lines"></div>
+    <div class="bg-layer stars"></div>
+    <div class="bg-layer stars s2"></div>
+    <div class="bg-layer noise"></div>
+  </div>
+
+  <!-- ===================== شاشة الدخول ===================== -->
+  <section class="login-view" id="loginView" hidden>
+    <form class="login-card" id="loginForm">
+      <div class="logo-mark big">أ</div>
+      <h1>لوحة المالك</h1>
+      <p class="muted">سجّل الدخول للتحكم في متجرك</p>
+
+      <label class="field" id="emailField" hidden>
+        <span>البريد الإلكتروني</span>
+        <input type="email" id="loginEmail" autocomplete="username" dir="ltr">
+      </label>
+
+      <label class="field">
+        <span>كلمة المرور</span>
+        <div class="pass-wrap">
+          <input type="password" id="loginPassword" autocomplete="current-password" dir="ltr" required>
+          <button type="button" class="pass-eye" id="passEye" aria-label="إظهار كلمة المرور">👁</button>
+        </div>
+      </label>
+
+      <p class="form-error" id="loginError"></p>
+
+      <button class="btn btn-primary btn-block" type="submit" id="loginBtn">دخول</button>
+      <p class="hint" id="loginHint"></p>
+      <a href="index.html" class="back-link">← العودة للمتجر</a>
+    </form>
+  </section>
+
+  <!-- ===================== لوحة التحكم ===================== -->
+  <div class="panel-view" id="panelView" hidden>
+
+    <header class="a-header">
+      <div class="a-brand">
+        <span class="logo-mark">أ</span>
+        <div>
+          <strong id="brandName">أتقن</strong>
+          <small>لوحة المالك</small>
+        </div>
+      </div>
+      <div class="a-actions">
+        <a href="index.html?preview=1" target="_blank" class="btn btn-outline btn-sm">👁 المتجر</a>
+        <button class="icon-btn" id="logoutBtn" aria-label="خروج" title="تسجيل الخروج">⏻</button>
+      </div>
+    </header>
+
+    <nav class="a-tabs" id="tabs">
+      <button class="a-tab active" data-tab="home"><i>🏠</i><span>الرئيسية</span></button>
+      <button class="a-tab" data-tab="products"><i>📦</i><span>المنتجات</span></button>
+      <button class="a-tab" data-tab="coupons"><i>🎟️</i><span>الكوبونات</span></button>
+      <button class="a-tab" data-tab="settings"><i>⚙️</i><span>الإعدادات</span></button>
+      <button class="a-tab" data-tab="appearance"><i>🎨</i><span>المظهر</span></button>
+      <button class="a-tab" data-tab="faq"><i>❓</i><span>الأسئلة</span></button>
+    </nav>
+
+    <main class="a-main">
+
+      <!-- ============ الرئيسية ============ -->
+      <section class="tab-page active" id="tab-home">
+        <div class="mode-card" id="modeCard"></div>
+
+        <div class="store-status" id="storeStatus"></div>
+
+        <div class="stats">
+          <div class="stat"><span>📦</span><strong id="statProducts">0</strong><small>كل المنتجات</small></div>
+          <div class="stat"><span>👁</span><strong id="statVisible">0</strong><small>ظاهرة للزوار</small></div>
+          <div class="stat"><span>🧾</span><strong id="statOrders">0</strong><small>الطلبات</small></div>
+          <div class="stat"><span>💰</span><strong id="statSales">0</strong><small>المبيعات</small></div>
+        </div>
+
+        <div class="pay-status" id="payStatus"></div>
+
+        <h3 class="a-title">إجراءات سريعة</h3>
+        <div class="quick">
+          <button class="quick-btn" data-action="new-product"><i>➕</i>إضافة منتج</button>
+          <button class="quick-btn" data-goto="coupons"><i>🎟️</i>كوبون خصم</button>
+          <button class="quick-btn" data-goto="appearance"><i>🎨</i>تغيير المظهر</button>
+          <button class="quick-btn" data-goto="settings" data-scroll="payBox"><i>💳</i>إعداد الدفع</button>
+        </div>
+
+        <div class="a-row orders-head">
+          <h3 class="a-title">🧾 آخر الطلبات</h3>
+          <button class="btn btn-outline btn-sm" id="refreshOrders">🔄 تحديث</button>
+        </div>
+        <div class="p-list" id="orderList"></div>
+      </section>
+
+      <!-- ============ المنتجات ============ -->
+      <section class="tab-page" id="tab-products">
+        <div class="a-row">
+          <h2>المنتجات</h2>
+          <button class="btn btn-primary btn-sm" data-action="new-product">➕ منتج جديد</button>
+        </div>
+        <div class="search a-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="productSearch" placeholder="ابحث في منتجاتك...">
+        </div>
+        <p class="hint list-hint">⬆️⬇️ لتغيير ترتيب الظهور في المتجر — المنتجات المميزة ⭐ تظهر أولاً</p>
+        <div class="p-list" id="productList"></div>
+      </section>
+
+      <!-- ============ الكوبونات ============ -->
+      <section class="tab-page" id="tab-coupons">
+        <h2>كوبونات الخصم</h2>
+        <form class="box" id="couponForm">
+          <h3>كوبون جديد</h3>
+          <div class="two">
+            <label class="field"><span>الكود</span><input name="code" dir="ltr" placeholder="WELCOME10" maxlength="20" required></label>
+            <label class="field"><span>نسبة الخصم %</span><input name="percent" type="number" min="1" max="100" inputmode="numeric" placeholder="10" required></label>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">➕ إضافة الكوبون</button>
+          <p class="hint">💡 انشر الكود في فيديوهاتك، والزبون يكتبه في السلة ويظهر الخصم في رسالة الطلب.</p>
+        </form>
+        <div class="p-list" id="couponList"></div>
+      </section>
+
+      <!-- ============ الإعدادات ============ -->
+      <section class="tab-page" id="tab-settings">
+        <h2>إعدادات المتجر</h2>
+        <form id="settingsForm" class="a-form">
+          <div class="box">
+            <h3>معلومات المتجر</h3>
+            <label class="field"><span>اسم المتجر</span><input name="name" required></label>
+            <label class="field"><span>شريط الإعلان أعلى المتجر <small>(اتركه فارغاً لإخفائه)</small></span><input name="announcement" placeholder="مثال: خصم 20% على كل المنتجات 🔥"></label>
+          </div>
+
+          <div class="box">
+            <h3>العنوان الرئيسي</h3>
+            <div class="hero-preview" id="heroPreview"></div>
+            <label class="field"><span>السطر الأول</span><input name="heroLine1"></label>
+            <label class="field"><span>الكلمة الملوّنة</span><input name="heroHighlight"></label>
+            <label class="field"><span>السطر الثاني</span><input name="heroLine2"></label>
+            <label class="field"><span>الوصف تحت العنوان</span><textarea name="tagline" rows="2"></textarea></label>
+          </div>
+
+          <div class="box">
+            <h3>الطلبات</h3>
+            <label class="field"><span>رقم واتساب <small>(مثال: 9665XXXXXXXX)</small></span><input name="whatsapp" dir="ltr" inputmode="numeric" required></label>
+            <label class="field"><span>العملة</span><input name="currency"></label>
+            <label class="field"><span>بداية رسالة الطلب</span><textarea name="orderGreeting" rows="2"></textarea></label>
+            <label class="toggle"><input type="checkbox" name="floatingWhatsapp"><span class="toggle-ui"></span><span>زر واتساب عائم في المتجر</span></label>
+          </div>
+
+          <div class="box">
+            <h3>الأقسام</h3>
+            <p class="hint">كل قسم في سطر</p>
+            <textarea name="categories" rows="4"></textarea>
+          </div>
+
+          <div class="box">
+            <h3>حسابات التواصل <small>(اترك الحقل فارغاً لإخفائه)</small></h3>
+            <label class="field"><span>تيك توك</span><input name="social_tiktok" dir="ltr" placeholder="https://"></label>
+            <label class="field"><span>إنستغرام</span><input name="social_instagram" dir="ltr" placeholder="https://"></label>
+            <label class="field"><span>يوتيوب</span><input name="social_youtube" dir="ltr" placeholder="https://"></label>
+            <label class="field"><span>إكس</span><input name="social_x" dir="ltr" placeholder="https://"></label>
+          </div>
+
+          <div class="box">
+            <h3>🛠️ وضع الصيانة</h3>
+            <label class="toggle"><input type="checkbox" name="maintenance"><span class="toggle-ui"></span><span>إغلاق المتجر مؤقتاً أمام الزوار</span></label>
+            <label class="field"><span>رسالة الزوار</span><input name="maintenanceMessage"></label>
+            <p class="hint">أنت تقدر تشوف المتجر عادي من زر "👁 المتجر" فوق.</p>
+          </div>
+
+          <div class="box" id="payBox">
+            <h3>💳 الدفع التلقائي عبر PayPal</h3>
+            <p class="hint">الزبون يدفع ← الفلوس تروح لحسابك في PayPal ← رابط المنتج يظهر له فوراً. بدون أي مراسلة.</p>
+            <label class="field"><span>PayPal Client ID <small>(فارغ = الطلب عبر واتساب)</small></span><input name="paypalClientId" dir="ltr" placeholder="AXy...." autocomplete="off"></label>
+            <div class="two">
+              <label class="field"><span>عملة الدفع</span>
+                <select name="paypalCurrency">
+                  <option value="USD">دولار USD</option>
+                  <option value="EUR">يورو EUR</option>
+                  <option value="GBP">جنيه GBP</option>
+                </select>
+              </label>
+              <label class="field"><span>1 من عملة متجرك = ؟</span><input name="paypalRate" type="number" step="0.0001" min="0.0001" dir="ltr" inputmode="decimal"></label>
+            </div>
+            <p class="hint">PayPal لا يدعم الريال السعودي، لذلك يتحول السعر تلقائياً. مثال: 1 ريال = 0.2667 دولار ← منتج بـ 30 ريال يُدفع 8.00 دولار.</p>
+            <label class="toggle"><input type="checkbox" name="whatsappOrders"><span class="toggle-ui"></span><span>إظهار خيار الطلب عبر واتساب أيضاً</span></label>
+            <details class="howto">
+              <summary>كيف أحصل على Client ID؟</summary>
+              <ol>
+                <li>ادخل <b dir="ltr">developer.paypal.com</b> وسجّل بحساب PayPal حقك</li>
+                <li>من <b>Apps &amp; Credentials</b> اختر <b>Live</b> (للتجربة اختر Sandbox)</li>
+                <li>اضغط <b>Create App</b> واكتب اسم مثل Atqen</li>
+                <li>انسخ <b>Client ID</b> والصقه هنا واحفظ</li>
+              </ol>
+              <p class="hint">⚠️ لا تنسخ الـ Secret أبداً، المتجر يحتاج Client ID فقط.</p>
+            </details>
+          </div>
+
+          <div class="box" id="pinBox">
+            <h3>🔑 كلمة مرور اللوحة</h3>
+            <label class="field"><span>كلمة المرور الجديدة</span><input name="ownerPin" type="password" dir="ltr" placeholder="اتركها فارغة لعدم التغيير" autocomplete="new-password"></label>
+          </div>
+
+          <button class="btn btn-primary btn-block sticky-save" type="submit">💾 حفظ الإعدادات</button>
+        </form>
+
+        <div class="box">
+          <h3>💾 نسخة احتياطية</h3>
+          <p class="hint">احفظ كل بيانات متجرك في ملف، أو استرجعها من ملف سابق.</p>
+          <div class="btn-row">
+            <button class="btn btn-outline btn-sm" id="exportBtn">⬇️ تصدير</button>
+            <label class="btn btn-outline btn-sm">⬆️ استيراد<input type="file" id="importInput" accept=".json,application/json" hidden></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ المظهر ============ -->
+      <section class="tab-page" id="tab-appearance">
+        <h2>المظهر</h2>
+        <div class="box">
+          <h3>خلفية المتجر</h3>
+          <div class="bg-options" id="bgOptions">
+            <button class="bg-opt" data-bgopt="royal"><div class="bg-prev prev-royal"></div><span>عنابي ملكي</span></button>
+            <button class="bg-opt" data-bgopt="glow"><div class="bg-prev prev-glow"></div><span>متوهج</span></button>
+            <button class="bg-opt" data-bgopt="stars"><div class="bg-prev prev-stars"></div><span>نجوم</span></button>
+            <button class="bg-opt" data-bgopt="grid"><div class="bg-prev prev-grid"></div><span>شبكة تقنية</span></button>
+            <button class="bg-opt" data-bgopt="plain"><div class="bg-prev prev-plain"></div><span>هادئ</span></button>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>لون المتجر</h3>
+          <div class="swatches" id="swatches">
+            <button class="swatch" data-color="#e2b85c" style="--c:#e2b85c" title="ذهبي ملكي"></button>
+            <button class="swatch" data-color="#f2b544" style="--c:#f2b544" title="ذهبي"></button>
+            <button class="swatch" data-color="#c2335e" style="--c:#c2335e" title="عنابي"></button>
+            <button class="swatch" data-color="#22c55e" style="--c:#22c55e" title="أخضر"></button>
+            <button class="swatch" data-color="#3b82f6" style="--c:#3b82f6" title="أزرق"></button>
+            <button class="swatch" data-color="#a855f7" style="--c:#a855f7" title="بنفسجي"></button>
+            <button class="swatch" data-color="#ef4444" style="--c:#ef4444" title="أحمر"></button>
+            <button class="swatch" data-color="#06b6d4" style="--c:#06b6d4" title="سماوي"></button>
+            <button class="swatch" data-color="#f97316" style="--c:#f97316" title="برتقالي"></button>
+            <label class="swatch custom" title="لون مخصص">🎨<input type="color" id="customColor"></label>
+          </div>
+        </div>
+
+        <p class="hint center">التغيير يظهر هنا مباشرة كمعاينة، ولا يُطبق على المتجر إلا بعد الحفظ</p>
+        <button class="btn btn-primary btn-block" id="saveThemeBtn">💾 حفظ المظهر</button>
+      </section>
+
+      <!-- ============ الأسئلة ============ -->
+      <section class="tab-page" id="tab-faq">
+        <div class="a-row">
+          <h2>الأسئلة الشائعة</h2>
+          <button class="btn btn-outline btn-sm" id="addFaqBtn">➕ سؤال</button>
+        </div>
+        <div id="faqEditor" class="faq-editor"></div>
+        <button class="btn btn-primary btn-block" id="saveFaqBtn">💾 حفظ الأسئلة</button>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===================== نافذة المنتج ===================== -->
+  <div class="modal" id="productModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel a-modal">
+      <div class="drawer-head">
+        <h3 id="productFormTitle">منتج جديد</h3>
+        <button class="icon-btn" data-close aria-label="إغلاق">✕</button>
+      </div>
+
+      <form id="productForm" class="a-form pad">
+        <div class="img-picker">
+          <div class="img-preview" id="imgPreview">📦</div>
+          <div class="img-actions">
+            <label class="btn btn-outline btn-sm">📷 رفع صورة<input type="file" id="imageInput" accept="image/*" hidden></label>
+            <button type="button" class="btn btn-danger btn-sm" id="removeImageBtn" hidden>حذف الصورة</button>
+            <small class="hint">بدون صورة؟ تظهر الأيقونة بدلاً منها</small>
+          </div>
+        </div>
+
+        <label class="field"><span>اسم المنتج *</span><input name="name" required></label>
+
+        <div class="two">
+          <label class="field"><span>القسم</span><select name="category" id="categorySelect"></select></label>
+          <label class="field"><span>الأيقونة</span><input name="icon" maxlength="4" placeholder="🎮"></label>
+        </div>
+
+        <div class="two">
+          <label class="field"><span>السعر <small>(0 = مجاني)</small></span><input name="price" type="number" min="0" step="0.01" inputmode="decimal" value="0"></label>
+          <label class="field"><span>السعر قبل الخصم</span><input name="oldPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="اختياري"></label>
+        </div>
+
+        <label class="field"><span>شارة <small>(اتركها فارغة وتظهر نسبة الخصم تلقائياً)</small></span><input name="badge" placeholder="جديد، الأكثر طلباً..."></label>
+        <label class="field"><span>الوصف</span><textarea name="description" rows="3"></textarea></label>
+        <label class="field"><span>المميزات <small>(كل ميزة في سطر)</small></span><textarea name="features" rows="3"></textarea></label>
+        <label class="field"><span>📥 رابط تحميل المنتج <small>(يظهر للزبون بعد الدفع — Google Drive أو غيره)</small></span><input name="downloadUrl" dir="ltr" placeholder="https://drive.google.com/..."></label>
+        <label class="field"><span>رابط صفحة دفع خارجية <small>(اختياري — مثل Payhip، يتجاوز PayPal المتجر)</small></span><input name="payLink" dir="ltr" placeholder="https://payhip.com/b/..."></label>
+
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" name="visible" checked><span class="toggle-ui"></span><span>ظاهر للزوار</span></label>
+          <label class="toggle"><input type="checkbox" name="featured"><span class="toggle-ui"></span><span>⭐ منتج مميز</span></label>
+        </div>
+
+        <div class="btn-row end">
+          <button type="button" class="btn btn-outline" data-close>إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="saveProductBtn">💾 حفظ المنتج</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

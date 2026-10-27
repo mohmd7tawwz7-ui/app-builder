@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="أتقن — متجر منتجات رقمية: ألعاب، قوالب، وأدوات جاهزة تصلك فوراً">
+  <meta name="theme-color" content="#07090d">
+  <title>أتقن | متجر المنتجات الرقمية</title>
+
+  <!-- لتثبيت المتجر كتطبيق على الجوال -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <!-- معاينة الرابط عند مشاركته في السوشل ميديا -->
+  <meta property="og:title" content="أتقن | متجر المنتجات الرقمية">
+  <meta property="og:description" content="ألعاب، قوالب، وأدوات جاهزة تصلك فوراً">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/icon-512.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- تطبيق الخلفية واللون المحفوظين فوراً (بدون وميض) -->
+  <script>
+    try {
+      var t = JSON.parse(localStorage.getItem("atqen_theme"));
+      document.documentElement.dataset.bg = (t && t.background) || "royal";
+      if (t) for (var k in t.vars) document.documentElement.style.setProperty(k, t.vars[k]);
+    } catch (e) { document.documentElement.dataset.bg = "royal"; }
+  </script>
+</head>
+<body>
+
+  <!-- ================= الخلفية ================= -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-layer royal"></div>
+    <div class="bg-layer layer-orbs">
+      <span class="orb o1"></span>
+      <span class="orb o2"></span>
+      <span class="orb o3"></span>
+    </div>
+    <div class="bg-layer grid-lines"></div>
+    <div class="bg-layer stars"></div>
+    <div class="bg-layer stars s2"></div>
+    <div class="bg-layer noise"></div>
+  </div>
+
+  <!-- ================= شريط الإعلان ================= -->
+  <div class="announce" id="announce" hidden></div>
+
+  <!-- ================= الشريط العلوي ================= -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <span class="logo-mark">أ</span>
+        <span class="logo-text" data-store="name">أتقن</span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#home">الرئيسية</a>
+        <a href="#products">المنتجات</a>
+        <a href="#why">لماذا نحن</a>
+        <a href="#faq">الأسئلة الشائعة</a>
+        <a href="#contact">تواصل معنا</a>
+        <a href="#" data-purchases>🧾 مشترياتي</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" id="cartBtn" aria-label="السلة">
+          <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="القائمة">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <!-- 🔒 زر المالك في الزاوية -->
+        <a href="admin.html" class="icon-btn owner-btn" aria-label="لوحة المالك" title="لوحة المالك">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= الواجهة ================= -->
+    <section class="hero" id="home">
+      <div class="container hero-inner">
+        <span class="eyebrow">✦ متجر المنتجات الرقمية</span>
+        <h1>
+          <span data-store="heroLine1">منتجات رقمية</span>
+          <span class="gold" data-store="heroHighlight">مُتقنة</span><br>
+          <span data-store="heroLine2">تصلك في ثوانٍ</span>
+        </h1>
+        <p class="hero-sub" data-store="tagline">ألعاب، قوالب، وأدوات جاهزة… صُنعت بإتقان لتوفّر وقتك وجهدك</p>
+        <div class="hero-cta">
+          <a href="#products" class="btn btn-primary">تصفّح المنتجات</a>
+          <a href="#contact" class="btn btn-outline">تواصل معنا</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>⚡</strong><span>تسليم فوري</span></div>
+          <div><strong>🔒</strong><span>دفع آمن</span></div>
+          <div><strong>💬</strong><span>دعم بالعربي</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= المنتجات ================= -->
+    <section class="section" id="products">
+      <div class="container">
+        <div class="section-head">
+          <h2>المنتجات</h2>
+          <p>اختر ما يناسبك من منتجاتنا الرقمية</p>
+        </div>
+
+        <div class="toolbar">
+          <div class="search">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="searchInput" placeholder="ابحث عن منتج...">
+          </div>
+          <select id="sortSelect" class="select">
+            <option value="default">الترتيب</option>
+            <option value="price-asc">الأقل سعراً</option>
+            <option value="price-desc">الأعلى سعراً</option>
+            <option value="newest">الأحدث</option>
+          </select>
+        </div>
+
+        <div class="chips" id="categoryChips"></div>
+        <div class="grid" id="productGrid"></div>
+      </div>
+    </section>
+
+    <!-- ================= لماذا نحن ================= -->
+    <section class="section section-alt" id="why">
+      <div class="container">
+        <div class="section-head">
+          <h2>لماذا <span class="gold" data-store="name">أتقن</span>؟</h2>
+          <p>نصنع كل منتج بعناية ليكون جاهزاً للاستخدام مباشرة</p>
+        </div>
+        <div class="features">
+          <div class="feature"><div class="f-icon">⚡</div><h3>تسليم فوري</h3><p>تستلم منتجك مباشرة بعد إتمام الطلب.</p></div>
+          <div class="feature"><div class="f-icon">💎</div><h3>جودة عالية</h3><p>منتجات مجرّبة ومصمّمة باحترافية.</p></div>
+          <div class="feature"><div class="f-icon">🔄</div><h3>تحديثات مستمرة</h3><p>تحصل على التحديثات المستقبلية للمنتج.</p></div>
+          <div class="feature"><div class="f-icon">💬</div><h3>دعم بالعربي</h3><p>نساعدك في أي استفسار بسرعة.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= الأسئلة الشائعة ================= -->
+    <section class="section" id="faq">
+      <div class="container narrow">
+        <div class="section-head">
+          <h2>الأسئلة الشائعة</h2>
+        </div>
+        <div class="faq" id="faqList"></div>
+      </div>
+    </section>
+
+    <!-- ================= تواصل معنا ================= -->
+    <section class="section section-alt" id="contact">
+      <div class="container narrow center">
+        <div class="section-head">
+          <h2>تواصل معنا</h2>
+          <p>عندك سؤال أو طلب خاص؟ راسلنا مباشرة</p>
+        </div>
+        <a class="btn btn-whatsapp" id="contactWhatsapp" href="#" target="_blank" rel="noopener">💬 راسلنا على واتساب</a>
+        <div class="socials" id="socialLinks"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= التذييل ================= -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="#" class="logo">
+        <span class="logo-mark">أ</span>
+        <span class="logo-text" data-store="name">أتقن</span>
+      </a>
+      <a href="#" class="owner-link" data-purchases>🧾 مشترياتي</a>
+      <p class="muted">© <span id="year"></span> <span data-store="name">أتقن</span> — جميع الحقوق محفوظة</p>
+    </div>
+  </footer>
+
+  <!-- ================= أزرار عائمة ================= -->
+  <a class="fab fab-whatsapp" id="fabWhatsapp" href="#" target="_blank" rel="noopener" aria-label="واتساب" hidden>
+    <svg viewBox="0 0 24 24"><path d="M3 21l1.6-4.7A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-2-2l.8-1-1-2z"/></svg>
+  </a>
+  <button class="fab fab-top" id="fabTop" aria-label="للأعلى">
+    <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <!-- ================= وضع الصيانة ================= -->
+  <div class="maintenance" id="maintenance" hidden>
+    <div class="m-box">
+      <div class="logo-mark big">أ</div>
+      <h2 data-store="name">أتقن</h2>
+      <p id="maintenanceText"></p>
+      <a class="btn btn-whatsapp" id="maintenanceWhatsapp" href="#" target="_blank" rel="noopener">💬 تواصل معنا</a>
+    </div>
+  </div>
+
+  <!-- ================= نافذة المنتج ================= -->
+  <div class="modal" id="productModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel" id="productPanel"></div>
+  </div>
+
+  <!-- ================= درج السلة ================= -->
+  <div class="drawer" id="cartDrawer" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <aside class="drawer-panel">
+      <div class="drawer-head">
+        <h3>سلة المشتريات</h3>
+        <button class="icon-btn" data-close aria-label="إغلاق">✕</button>
+      </div>
+      <div class="drawer-body" id="cartItems"></div>
+      <div class="drawer-foot" id="cartFoot"></div>
+    </aside>
+  </div>
+
+  <!-- ================= نافذة الدفع والتسليم ================= -->
+  <div class="modal" id="checkoutModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel checkout-panel" id="checkoutPanel"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ترتيب الملفات مهم -->
+  <script src="js/config.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/favorites.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/checkout.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
